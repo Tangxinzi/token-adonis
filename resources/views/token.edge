@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="icon" href="/logo.jpg" />
+  <title>后台管理</title>
+  {{ style('semantic/dist/semantic.min') }}
+  {{ style('style/token') }}
+</head>
+<body>
+  <div class="pege background">
+    <div class="ui large borderless menu">
+      <a class="item" href="{{ route }}">
+        <img src="/logo.jpg" />
+        <h2 class="ui header" style="margin-top: 0; margin-left: 15px; font-size: 20px;">管理平台</h2>
+      </a>
+      <div class="right menu">
+        <div class="ui category search item">
+          <a href="/console/logout"><small>{{ users.Data.Phone }}，退出</small> <i class="sign-out link icon"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="ui padded grid">
+      <div class="four wide column">
+        <div class="ui link list">
+          @each(data in navigation)
+          <div class="item{{ data.id == id ? ' active' : '' }}">
+            <a href="{{ route }}?id={{ data.id }}">{{ data.text }}</a>
+          </div>
+          @endeach
+        </div>
+      </div>
+      <div class="twelve wide column">
+        @if(flashMessage('message'))
+          @!component('components.alert', {
+            type: [flashMessage('type')],
+            header: [flashMessage('header')],
+            message: [flashMessage('message')]
+          })
+        @endif
+        @if(id == '0')
+          <div class="ui form">
+            <form class="ui fluid" method="post" action="{{ route }}">
+              <div class="ui session active">
+                <div class="three fields">
+                  <div class="five wide field">
+                    <label>币种全称</label>
+                    <input type="text" id="name" name="name" placeholder="" autocomplete="off" />
+                  </div>
+                </div>
+                <div class="three fields">
+                  <div class="five wide field">
+                    <label>币种简称</label>
+                    <input type="text" id="symbol" name="symbol" placeholder="" autocomplete="off" />
+                  </div>
+                </div>
+                <div class="three fields">
+                  <div class="five wide field">
+                    <label>发币数量</label>
+                    <input type="text" id="supply" name="supply" placeholder="" autocomplete="off" />
+                  </div>
+                </div>
+                <div class="three fields">
+                  <div class="five wide field">
+                    <label>管理员账户 Address</label>
+                    <input type="text" id="account" name="account" placeholder="" autocomplete="off" />
+                  </div>
+                </div>
+                <div class="three fields">
+                  <div class="five wide field">
+                    <div class="inline field">
+                      <div class="ui checkbox">
+                        <input type="checkbox" name="lock" class="hidden">
+                        <label>是否锁仓</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="one fields">
+                  <div class="two wide field">
+                    {{ csrfField() }}
+                    <button class="fluid ui button primary" value="0" type="submit" name="submit">Submit</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        @elseif(id == '1')
+          <div class="ui form">
+            <form class="ui fluid" method="post" action="/token">
+              <div class="ui session active">
+                <div class="three fields">
+                  <div class="five wide field">
+                    <label>代币 Key</label>
+                    <input type="text" id="symbol" name="symbol" placeholder="" autocomplete="off" />
+                  </div>
+                </div>
+                <div class="three fields">
+                  <div class="five wide field">
+                    <label>增发数量</label>
+                    <input type="text" id="amount" name="amount" placeholder="" autocomplete="off" />
+                  </div>
+                </div>
+                <div class="three fields">
+                  <div class="five wide field">
+                    <label>管理员手机号</label>
+                    <input type="text" id="phone" name="phone" placeholder="" autocomplete="off" />
+                  </div>
+                </div>
+                <div class="one fields">
+                  <div class="two wide field">
+                    {{ csrfField() }}
+                    <button class="fluid ui button primary" value="1" type="submit" name="submit">Submit</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        @elseif(id == '2')
+          <div class="ui form">
+            <form class="ui fluid" method="post" action="/token">
+              <div class="ui session active">
+                <div class="three fields">
+                  <div class="five wide field">
+                    <label>代币 Key</label>
+                    <input type="text" id="symbol" name="symbol" placeholder="" autocomplete="off" />
+                  </div>
+                </div>
+                <div class="three fields">
+                  <div class="five wide field">
+                    <label>增发数量</label>
+                    <input type="text" id="amount" name="amount" placeholder="" autocomplete="off" />
+                  </div>
+                </div>
+                <div class="three fields">
+                  <div class="five wide field">
+                    <label>销毁账户地址</label>
+                    <input type="text" id="account" name="account" placeholder="" autocomplete="off" />
+                  </div>
+                </div>
+                <div class="three fields">
+                  <div class="five wide field">
+                    <label>管理员手机号</label>
+                    <input type="text" id="phone" name="phone" placeholder="" autocomplete="off" />
+                  </div>
+                </div>
+                <div class="one fields">
+                  <div class="two wide field">
+                    {{ csrfField() }}
+                    <button class="fluid ui button primary" value="2" type="submit" name="submit">Submit</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        @elseif(id == '3')
+          <div class="ui form">
+            <form class="ui fluid" method="post" action="/token">
+              <div class="ui session active">
+                <div class="three fields">
+                  <div class="five wide field">
+                    <label>代币 Key</label>
+                    <input type="text" id="symbol" name="symbol" placeholder="" autocomplete="off" />
+                  </div>
+                </div>
+                <div class="three fields">
+                  <div class="five wide field">
+                    <label>管理员手机号</label>
+                    <input type="text" id="phone" name="phone" placeholder="" autocomplete="off" />
+                  </div>
+                </div>
+                <div class="three fields">
+                  <div class="five wide field">
+                    <div class="inline field">
+                      <div class="ui checkbox">
+                        <input type="checkbox" name="lock" class="hidden">
+                        <label>是否锁仓</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="one fields">
+                  <div class="two wide field">
+                    {{ csrfField() }}
+                    <button class="fluid ui button primary" value="3" type="submit" name="submit">Submit</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        @elseif(id == '4')
+          <div class="ui form">
+            <form class="ui fluid" method="post" action="/token">
+              <div class="ui session active">
+                <div class="three fields">
+                  <div class="five wide field">
+                    <label>冻结账户地址</label>
+                    <input type="text" id="account" name="account" placeholder="" autocomplete="off" />
+                  </div>
+                </div>
+                <div class="three fields">
+                  <div class="five wide field">
+                    <label>管理员手机号</label>
+                    <input type="text" id="phone" name="phone" placeholder="" autocomplete="off" />
+                  </div>
+                </div>
+                <div class="three fields">
+                  <div class="five wide field">
+                    <div class="inline field">
+                      <div class="ui checkbox">
+                        <input type="checkbox" name="status" class="hidden">
+                        <label>是否冻结</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="one fields">
+                  <div class="two wide field">
+                    {{ csrfField() }}
+                    <button class="fluid ui button primary" value="4" type="submit" name="submit">Submit</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        @elseif(id == '5')
+          <div class="ui form">
+            <form class="ui fluid" method="post" action="/token">
+              <div class="ui session active">
+                <div class="three fields">
+                  <div class="five wide field">
+                    <label>管理员手机号</label>
+                    <input type="text" id="phone" name="phone" placeholder="" autocomplete="off" />
+                  </div>
+                </div>
+                <div class="one fields">
+                  <div class="two wide field">
+                    {{ csrfField() }}
+                    <button class="fluid ui button primary" value="5" type="submit" name="submit">Submit</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        @elseif(id == '6')
+          <div class="ui form">
+            <form class="ui fluid" method="post" action="/token">
+              <div class="ui session active">
+                <div class="ui selection dropdown">
+                  <input type="hidden" name="gender">
+                  <i class="dropdown icon"></i>
+                  <div class="default text">查看状态</div>
+                  <div class="menu">
+                    <div class="item" data-value="">所有状态</div>
+                    <div class="item" data-value="0">未审核</div>
+                    <div class="item" data-value="1">已审核</div>
+                    <div class="item" data-value="2">审核失败</div>
+                  </div>
+                </div>
+                <table class="ui fixed small selectable celled table">
+                  <thead>
+                    <tr>
+                      <th class="two wide">全称</th>
+                      <th class="three wide">数量</th>
+                      <th class="three wide">代币账户</th>
+                      <th class="one wide ui center aligned">锁仓</th>
+                      <th class="one wide ui center aligned">状态</th>
+                      <th class="three wide">代币地址</th>
+                      <th class="three wide ui center aligned">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @each(data in data.Data)
+                      <tr data-label="{{ data.Id }}">
+                        <td data-label="Name">{{ data.Name }}（{{ data.Symbol }}）</td>
+                        <td data-label="Supply">{{ data.Supply }}</td>
+                        <td data-label="Account">{{ data.Account }}</td>
+                        <td data-label="Lock" class="ui center aligned">{{ data.Lock == true ? '是' : '否' }}</td>
+                        <td data-label="Status" class="ui center aligned">{{ data.Status == 0 ? '未审核' : '' }}{{ data.Status == 1 ? '已审核' : '' }}{{ data.Status == 2 ? '审核失败' : '' }}</td>
+                        <td data-label="Address">{{ data.Address }}</td>
+                        <td data-label="button" class="ui center aligned">
+                          <button class="mini ui green {{ data.Status == 0 ? '' : 'disabled' }} button">通过</button>
+                          <button class="mini ui orange {{ data.Status == 0 ? '' : 'disabled' }} button">驳回</button>
+                        </td>
+                      </tr>
+                    @endeach
+                  </tbody>
+                </table>
+              </div>
+            </form>
+          </div>
+        @endif
+      </div>
+    </div>
+  </div>
+  {{ script('https://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js') }}
+  {{ script('semantic/dist/semantic.min') }}
+  <script type="text/javascript">
+    $('.ui.checkbox').checkbox()
+    console.log({{ status }})
+    $('.ui.dropdown').dropdown({
+      clearable: true,
+      action: function(text, value) {
+        console.log(text, value, window.location)
+        window.location.href = window.location.origin + window.location.pathname + '?id=6&status=' + value
+      },
+
+    })
+    .dropdown('set selected', {{ status }} + '')
+  </script>
+</body>
+</html>
