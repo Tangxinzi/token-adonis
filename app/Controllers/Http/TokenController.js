@@ -6,6 +6,7 @@ const { validate, validateAll }  = use('Validator')
 require('superagent-charset')(superagent)
 const Env           = use('Env')
 const Redis         = use('Redis')
+const Helpers       = use('Helpers')
 
 class TokenController {
   _rules(request) {
@@ -16,7 +17,8 @@ class TokenController {
             name: 'required',
             symbol: 'required',
             supply: 'required',
-            account: 'required'
+            account: 'required',
+            precision: 'required',
           },
           {
             url: Env.get('BASE_URL') + 'v1/token/initCurrencyByAdmin'
@@ -27,6 +29,7 @@ class TokenController {
               "symbol": request.input('symbol'),
               "supply": request.input('supply'),
               "account": request.input('account'),
+              "precision": request.input('precision'),
               "lock": request.input('lock') == 'on' ? 'true' : 'false'
             })
           }
@@ -125,32 +128,28 @@ class TokenController {
           }
         ]
         break;
-      case '5':
-        return [
-          {
-            phone: 'required'
-          },
-          {
-            url: Env.get('BASE_URL') + 'v1/token/createTokenAdmin'
-          },
-          {
-            json: JSON.stringify({
-              "phone": request.input('phone')
-            })
-          }
-        ]
-        break;
       case '6':
         return [
           {
-            status: 'required'
+            tokenKey: 'required',
+            fee: 'required',
+            otcAccount: 'required',
+            usdRate: 'required',
+            cnyRate: 'required',
+            price: 'required'
           },
           {
-            url: Env.get('BASE_URL') + 'v1/token/showCurrency'
+            url: Env.get('BASE_URL') + 'v1/token/pageCoin'
           },
           {
             json: JSON.stringify({
-              "status": request.input('status')
+              "tokenKey": request.input('tokenKey'),
+              "isOtc": request.input('isOtc') == 'on' ? true : false,
+              "fee": Number(request.input('fee')),
+              "otcAccount": Number(request.input('otcAccount')),
+              "usdRate": Number(request.input('usdRate')),
+              "cnyRate": Number(request.input('cnyRate')),
+              "price": Number(request.input('price')),
             })
           }
         ]
@@ -175,6 +174,53 @@ class TokenController {
       .buffer(true)
       .send(rules[2].json)
     const json = JSON.parse(result.text)
+
+    if (request.file('tokenLogo')) {
+      const tokenLogo = request.file('tokenLogo', {
+        types: ['image'],
+        size: '10mb'
+      })
+
+      const fileName = `${ new Date().getTime() }.${ tokenLogo.subtype }`
+
+      // await tokenLogo.move(Helpers.publicPath('uploads', {
+      //   name: fileName
+      // }))
+
+      // var formData = new FormData()
+      // formData.append('tokenKey', request.input('tokenKey'))
+      // formData.append('tokenLogo', {
+      //   uri: tokenLogo.tmpPath,
+      //   type: 'multipart/form-data',
+      //   name: fileName,
+      //   mime: tokenLogo.subtype
+      // })
+
+      await superagent.post(Env.get('BASE_URL') + 'v1/token/pageCoinLogo')
+        .field('tokenKey', request.input('tokenKey'))
+        .field('tokenLogo', 'tokenLogo')
+        .attach('tokenLogo', tokenLogo.tmpPath)
+        .then((result) => {
+          const json = JSON.parse(result.text)
+          console.log(json)
+          if (json.data.Code == 200) {
+            session.flash({
+              type: 'blue',
+              header: '提交成功',
+              message: `${ json.data.Message }`
+            })
+          } else {
+            session.flash({
+              type: 'red',
+              header: '提交失败',
+              message: `${ json.data.Message }`
+            })
+          }
+        })
+        .catch((err) => {
+          throw err;
+        });
+    }
 
     if (json.data.Code == 200) {
       session.flash({
@@ -228,6 +274,8 @@ class TokenController {
 
       // set user
       await Redis.set('users', JSON.stringify(json.data))
+      // set user-agent
+      await Redis.set('userAgent', JSON.stringify(request.request.headers['user-agent']))
       return response.redirect('/console/token?id=0')
     } else {
       session.flash({
@@ -257,6 +305,7 @@ class TokenController {
   }
 
   async render ({ request, view }) {
+    // route
     const navigation = [
       {
         id: 0,
@@ -286,6 +335,10 @@ class TokenController {
         id: 6,
         text: '审核代币'
       },
+      {
+        id: 7,
+        text: '所有币种'
+      }
     ]
     const route = '/console/token'
 
@@ -293,6 +346,7 @@ class TokenController {
     const cachedUsers = await Redis.get('users')
     const users = JSON.parse(cachedUsers)
 
+    // token?id=
     if (request.input('id') == 6) {
       const result = await superagent.post(Env.get('BASE_URL') + 'v1/token/showCurrency')
         .buffer(true)
@@ -303,6 +357,37 @@ class TokenController {
       const json = JSON.parse(result.text)
       return view.render('token', { navigation, id: request.input('id') || 0, route, users, data: json.data, status: request.input('status') || '' })
     }
+
+    if (request.input('id') == 7) {
+      const result = await superagent.get(Env.get('BASE_URL') + 'v1/token/getCoin')
+        .buffer(true)
+        .send(JSON.stringify({
+          "status": request.input('status') || ''
+        }))
+
+      var tokenKeyResult, tokenKeyJson = null
+
+      if (request.input('tokenKey')) {
+        tokenKeyResult = await superagent.post(Env.get('BASE_URL') + 'v1/token/getCoinByKey')
+          .buffer(true)
+          .send(JSON.stringify({
+            "tokenKey": request.input('tokenKey')
+          }))
+
+        tokenKeyJson = JSON.parse(tokenKeyResult.text)
+      }
+
+      const json = JSON.parse(result.text)
+      return view.render('token', {
+        navigation,
+        id: request.input('id') || 0,
+        route,
+        users,
+        data: json.data,
+        token: tokenKeyJson ? tokenKeyJson.data.Data : null
+      })
+    }
+
     if (users != null && users.Code == 200) {
       return view.render('token', { navigation, id: request.input('id') || 0, route, users })
     } else {

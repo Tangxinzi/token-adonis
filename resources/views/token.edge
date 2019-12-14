@@ -63,6 +63,12 @@
                 </div>
                 <div class="three fields">
                   <div class="five wide field">
+                    <label>精度</label>
+                    <input type="number" id="precision" name="precision" placeholder="" autocomplete="off" />
+                  </div>
+                </div>
+                <div class="three fields">
+                  <div class="five wide field">
                     <label>管理员账户 Address</label>
                     <input type="text" id="account" name="account" placeholder="" autocomplete="off" />
                   </div>
@@ -88,7 +94,7 @@
           </div>
         @elseif(id == '1')
           <div class="ui form">
-            <form class="ui fluid" method="post" action="/token">
+            <form class="ui fluid" method="post" action="{{ route }}">
               <div class="ui session active">
                 <div class="three fields">
                   <div class="five wide field">
@@ -119,7 +125,7 @@
           </div>
         @elseif(id == '2')
           <div class="ui form">
-            <form class="ui fluid" method="post" action="/token">
+            <form class="ui fluid" method="post" action="{{ route }}">
               <div class="ui session active">
                 <div class="three fields">
                   <div class="five wide field">
@@ -156,7 +162,7 @@
           </div>
         @elseif(id == '3')
           <div class="ui form">
-            <form class="ui fluid" method="post" action="/token">
+            <form class="ui fluid" method="post" action="{{ route }}">
               <div class="ui session active">
                 <div class="three fields">
                   <div class="five wide field">
@@ -191,7 +197,7 @@
           </div>
         @elseif(id == '4')
           <div class="ui form">
-            <form class="ui fluid" method="post" action="/token">
+            <form class="ui fluid" method="post" action="{{ route }}">
               <div class="ui session active">
                 <div class="three fields">
                   <div class="five wide field">
@@ -226,7 +232,7 @@
           </div>
         @elseif(id == '5')
           <div class="ui form">
-            <form class="ui fluid" method="post" action="/token">
+            <form class="ui fluid" method="post" action="{{ route }}">
               <div class="ui session active">
                 <div class="three fields">
                   <div class="five wide field">
@@ -245,7 +251,7 @@
           </div>
         @elseif(id == '6')
           <div class="ui form">
-            <form class="ui fluid" method="post" action="/token">
+            <form class="ui fluid" method="post" action="{{ route }}">
               <div class="ui session active">
                 <div class="ui selection dropdown">
                   <input type="hidden" name="gender">
@@ -290,6 +296,126 @@
               </div>
             </form>
           </div>
+        @elseif(id == '7')
+          @if(token)
+            <div class="ui form">
+              <form class="ui fluid" method="post" action="{{ route }}" enctype="multipart/form-data">
+                <div class="ui session active">
+                  <div class="three fields" style="display: none">
+                    <div class="five wide field">
+                      <label>代币 Key</label>
+                      <input type="text" id="tokenKey" name="tokenKey" value="{{ token.TokenKey }}" placeholder="" autocomplete="off" />
+                    </div>
+                  </div>
+                  <div class="three fields">
+                    <div class="five wide field">
+                      <label>满足多少持币量才能交易 OTC</label>
+                      <input type="number" id="otcAccount" name="otcAccount" value="{{ token.OtcAccount }}" placeholder="" autocomplete="off" />
+                    </div>
+                    <div class="five wide field">
+                      <label>代币数量</label>
+                      <input type="number" id="Supply" name="Supply" value="{{ token.Supply }}" placeholder="" disabled autocomplete="off" />
+                    </div>
+                    <div class="five wide field">
+                      <label>代币名称</label>
+                      <input type="text" id="Symbol" name="Symbol" value="{{ token.Cname }}（{{ token.Symbol }}）" placeholder="" disabled autocomplete="off" />
+                    </div>
+                  </div>
+                  <div class="three fields">
+                    <div class="five wide field">
+                      <label>手续费</label>
+                      <input type="number" id="fee" name="fee" value="{{ token.WithdrawFee }}" placeholder="" autocomplete="off" />
+                    </div>
+                    <div class="five wide field">
+                      <label>OTC 交易数（满足多少持币量才可以发起 OTC 交易）</label>
+                      <input type="number" id="OtcAccount" name="OtcAccount" value="{{ token.OtcAccount }}" placeholder="" disabled autocomplete="off" />
+                    </div>
+                    <div class="five wide field" style="position: relative;">
+                      <label>币种 Logo</label>
+                      <div class="ui input">
+                        <input type="file" id="tokenLogo" name="tokenLogo" value="" placeholder="上传 Logo" autocomplete="off" />
+                      </div>
+                      <img class="image" src="{{ token.Image }}" alt="币种 Logo" />
+                    </div>
+                  </div>
+                  <div class="three fields">
+                    <div class="five wide field">
+                      <label>美元汇率</label>
+                      <input type="number" id="usdRate" name="usdRate" value="{{ token.UsdRate }}" placeholder="" autocomplete="off" />
+                    </div>
+                    <div class="five wide field">
+                      <label>精度</label>
+                      <input type="number" id="PriceScale" name="PriceScale" value="{{ token.PriceScale }}" placeholder="" disabled autocomplete="off" />
+                    </div>
+                  </div>
+                  <div class="three fields">
+                    <div class="five wide field">
+                      <label>人民币汇率</label>
+                      <input type="number" id="cnyRate" name="cnyRate" value="{{ token.CnyRate }}" placeholder="" autocomplete="off" />
+                    </div>
+                    <div class="five wide field">
+                      <label>所属类别（以太坊 erc20 为 EthERC20）</label>
+                      <input type="text" id="Type" name="Type" value="{{ token.Type }}" placeholder="" disabled autocomplete="off" />
+                    </div>
+                  </div>
+                  <div class="three fields">
+                    <div class="five wide field">
+                      <label>单价</label>
+                      <input type="number" id="price" name="price" value="{{ token.Price }}" placeholder="" autocomplete="off" />
+                    </div>
+                    <div class="five wide field">
+                      <label>代币账户拥有者账户</label>
+                      <input type="text" id="Account" name="Account" value="{{ token.Account }}" placeholder="" disabled autocomplete="off" />
+                    </div>
+                  </div>
+                  <div class="three fields">
+                    <div class="five wide field">
+                      <div class="inline field">
+                        <div class="ui checkbox">
+                          <input type="checkbox" {{ token.Price ? 'checked' : null }} name="isOtc" class="hidden">
+                          <label>是否支持 OTC 交易</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="five wide field">
+                      <div class="inline field">
+                        <div class="ui checkbox">
+                          <input type="checkbox" {{ token.Lock ? 'checked' : null }} name="isOtc" class="hidden" disabled>
+                          <label>是否锁仓</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="five wide field">
+                      <div class="inline field">
+                        <div class="ui checkbox">
+                          <input type="checkbox" {{ token.IsPlatformCoin ? 'checked' : null }} name="isOtc" class="hidden" disabled>
+                          <label>是否为平台币</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="five wide field">
+                      <div class="inline field">
+                        <div class="ui checkbox">
+                          <input type="checkbox" {{ token.IsOtc ? 'checked' : null }} name="isOtc" class="hidden" disabled>
+                          <label>是否开启OTC</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="one fields">
+                    <div class="two wide field">
+                      {{ csrfField() }}
+                      <button class="fluid ui button primary" value="6" type="submit" name="submit">Submit</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          @endif
+          @!component('components.coin', {
+            data,
+            route
+          })
         @endif
       </div>
     </div>

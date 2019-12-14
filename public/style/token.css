@@ -37,3 +37,42 @@ body {
   border-radius: 0;
   border-top: 0;
 }
+
+.login .content img {
+  width: 15%;
+  margin: 0 auto;
+  border-radius: 5px;
+}
+
+.logo {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 0;
+  margin-right: 10px;
+}
+
+.name {
+  display: flex;
+  align-items: center;
+}
+
+.address {
+  width: 33.3%;
+  display: inline-block;
+  text-align: center;
+}
+
+.image {
+  width: 60%;
+  position: absolute;
+  left: 0;
+  padding: 2.5em;
+  margin: 10% 20%;
+}
+
+#tokenLogo {
+  font-size: 0.85rem;
+  height: 38px;
+  line-height: 16px;
+}
