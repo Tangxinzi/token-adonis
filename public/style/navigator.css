@@ -1,0 +1,33 @@
+.ui.large.borderless.menu {
+  border-radius: 0;
+  margin: 0;
+}
+
+.ui.large.borderless.menu .ui.header {
+  margin-top: 0;
+  margin-left: 15px;
+  font-size: 20px;
+}
+
+.ui.large.borderless.menu .grid small {
+  height: 40.84px;
+  line-height: 40.84px;
+  width: 40.84px;
+  text-align: center;
+  border-right: 1px solid #CCC;
+}
+
+.ui.large.borderless.menu .grid.active {
+  background: #35bdb2;
+  color: #FFF;
+}
+
+.ui.large.borderless.menu .container {
+  display: flex;
+  align-items: center;
+}
+
+.ui.large.borderless.menu .button {
+  margin-left: 1.14285714em;
+  margin-right: 1.14285714em;
+}

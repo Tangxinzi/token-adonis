@@ -16,6 +16,13 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 
+Route.get('/', 'IndexController.render')
+
+Route.group(() => {
+  Route.get('/item/:id', 'PaperController.render')
+  Route.post('/item/:id', 'PaperController.store')
+}).prefix('paper')
+
 Route.group(() => {
   Route.get('login', 'TokenController.user')
   Route.post('login', 'TokenController.login')

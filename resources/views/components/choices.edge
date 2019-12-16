@@ -1,0 +1,8 @@
+@each(choice in choices)
+  <div class="choice field" data-subject="{{ index + 0 }}" data-item="{{ $loop.index }}">
+    <div class="ui radio checkbox">
+      <input type="radio" name="choice_{{ index + 0 }}" class="hidden">
+      <label>{{ choice }}</label>
+    </div>
+  </div>
+@endeach

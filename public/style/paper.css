@@ -1,0 +1,16 @@
+.paper img {
+  width: 100%;
+}
+
+.paper .ui.segment {
+  text-align: left;
+}
+
+.paper figure {
+  margin: 0;
+}
+
+#answercard {
+  cursor: pointer;
+  margin-right: 10px;
+}
