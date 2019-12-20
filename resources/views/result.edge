@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>能力测试报告 - 网络考试平台</title>
+  {{ style('semantic/dist/semantic.min') }}
+  {{ style('style') }}
+  {{ style('style/navigator') }}
+  {{ style('style/paper') }}
+</head>
+<body class="body">
+  <div class="ui large borderless menu">
+    <a class="item" href="/">
+      <img src="https://semantic-ui.com/examples/assets/images/logo.png" />
+      <h2 class="ui header">网络考试平台</h2>
+    </a>
+    <div class="right menu">
+      <div class="ui category search item">
+
+      </div>
+    </div>
+  </div>
+  <div class="ui large borderless menu">
+    @each(entity in result.extended_custom_fields.extended_content.links)
+      <div class="grid grid-{{ $loop.index }} {{ grid[$loop.index].res ? 'active' : 'error' }}" data-subject="" data-true="{{ result.extended_custom_fields.more_information[$loop.index].choices_true.value }}">
+        <small>{{ $loop.index + 1 }}</small>
+      </div>
+    @endeach
+    <div class="right menu">
+      <div class="container">
+        <button id="submit" type="submit" name="button" class="ui mini teal button">下载报告</button>
+      </div>
+    </div>
+  </div>
+  <div class="ui middle center aligned grid" style="margin-top: 8%">
+    <div class="seven wide column">
+      <h2 class="ui teal image header">
+        <div class="content">能力测试报告</div>
+      </h2>
+      <div class="paper">
+        <div class="ui segment" style="text-align: center">
+          <div class="field">
+            <div class="ui statistic header field">
+              <div class="value">
+                {{ achievement }}
+              </div>
+              <div class="label">成绩</div>
+            </div>
+          </div>
+        </div>
+        @each(entity in result.extended_custom_fields.extended_content.links)
+          <div class="ui segment segment-{{ $loop.index }} {{ grid[$loop.index].res ? 'active' : 'error' }}">
+            <div class="field">
+              <h3>{{ $loop.index + 1 }}. {{ entity.post_title }}</h3>
+              <p>{{{ entity.post_content }}}</p>
+            </div>
+            <div class="ui form">
+              @if(result.extended_custom_fields.more_information[$loop.index].type.value == 1)
+                @!component('components.choices', {
+                  index: $loop.index,
+                  grid: grid[$loop.index],
+                  choices: result.extended_custom_fields.more_information[$loop.index].choices
+                })
+              @endif
+            </div>
+          </div>
+        @endeach
+      </div>
+    </div>
+  </div>
+  {{ script('js/jquery/jquery-1.7.1.min') }}
+  {{ script('dist/jspdf.min') }}
+  {{ script('semantic/dist/semantic.min') }}
+  <script type="text/javascript">
+    $("#submit").click(function () {
+      var num = 0
+      $('.grid.active').each((i) => {
+        if ($(".grid-" + i).data("subject") == $(".grid-" + i).data("true")) {
+          num ++
+        }
+        console.log('用户选择：' + $(".grid-" + i).data("subject") + '\t正确答案：' + $(".grid-" + i).data("true"))
+      })
+
+      if ($('.grid.active').length) {
+        console.log('您的成绩为：' + 100 / $('.grid.active').length * num)
+        printPDF(num)
+      }
+    })
+
+    function printPDF(num) {
+      var doc = new jsPDF()
+      doc.text(20, 20, '您的成绩为：' + 100 / $('.grid.active').length * num)
+      doc.save('Test.pdf')
+
+      var target = document.getElementsByClassName("body")[0];
+        target.style.background = "#FFFFFF";
+        html2canvas(target, {
+          onrendered:function(canvas) {
+              var contentWidth = canvas.width;
+              var contentHeight = canvas.height;
+
+          //一页pdf显示html页面生成的canvas高度;
+          var pageHeight = contentWidth / 592.28 * 841.89;
+          //未生成pdf的html页面高度
+          var leftHeight = contentHeight;
+          //页面偏移
+          var position = 0;
+          //a4纸的尺寸[595.28,841.89]，html页面生成的canvas在pdf中图片的宽高
+          var imgWidth = 595.28;
+          var imgHeight = 592.28 / contentWidth * contentHeight;
+
+          var pageData = canvas.toDataURL('image/jpeg', 1.0);
+
+          var pdf = new jsPDF('', 'pt', 'a4');
+
+          //有两个高度需要区分，一个是html页面的实际高度，和生成pdf的页面高度(841.89)
+          //当内容未超过pdf一页显示的范围，无需分页
+          if (leftHeight < pageHeight) {
+          pdf.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight );
+          } else {
+              while(leftHeight > 0) {
+                  pdf.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight)
+                  leftHeight -= pageHeight;
+                  position -= 841.89;
+                  //避免添加空白页
+                  if(leftHeight > 0) {
+                    pdf.addPage();
+                  }
+              }
+          }
+
+          pdf.save("content.pdf");
+        }
+      })
+    }
+  </script>
+</body>
+</html>

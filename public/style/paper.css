@@ -3,7 +3,30 @@
 }
 
 .paper .ui.segment {
+  position: relative;
   text-align: left;
+}
+
+.paper .ui.segment.active::after {
+  content: '';
+  background: rgba(53, 189, 178, 0.1);
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.paper .ui.segment.error::after {
+  content: '';
+  background: rgba(255, 0, 0, 0.1);
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .paper figure {

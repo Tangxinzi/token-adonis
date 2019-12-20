@@ -2,13 +2,13 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8" />
-  <title>Hello Adonis</title>
+  <title>{{ result.title.rendered }} - 网络考试平台</title>
   {{ style('semantic/dist/semantic.min') }}
   {{ style('style') }}
   {{ style('style/navigator') }}
   {{ style('style/paper') }}
 </head>
-<body id="body" class="body">
+<body class="body">
   <div class="ui large borderless menu">
     <a class="item" href="/">
       <img src="https://semantic-ui.com/examples/assets/images/logo.png" />
@@ -21,52 +21,56 @@
       </div>
     </div>
   </div>
-  <div class="ui large borderless menu">
+  <form class="ui large form borderless menu" method="post" action="#">
+    <input type="text" name="length" value="{{ result.extended_custom_fields.extended_content.links.length }}" style="display: none">
     @each(entity in result.extended_custom_fields.extended_content.links)
       <div class="grid grid-{{ $loop.index }}" data-subject="" data-true="{{ result.extended_custom_fields.more_information[$loop.index].choices_true.value }}">
         <small>{{ $loop.index + 1 }}</small>
+        <input type="text" name="subject-{{ $loop.index }}" value="" class="subject-{{ $loop.index }}" style="display: none">
+        <input type="text" name="true-{{ $loop.index }}" value="{{ result.extended_custom_fields.more_information[$loop.index].choices_true.value }}" style="display: none">
       </div>
     @endeach
     <div class="right menu">
       <div class="container">
+        {{ csrfField() }}
         <button id="submit" type="submit" name="button" class="ui mini teal button">提交</button>
       </div>
     </div>
-  </div>
+  </form>
   <div class="ui middle center aligned grid" style="margin-top: 8%">
     <div class="seven wide column">
       <h2 class="ui teal image header">
         <div class="content">{{ result.title.rendered }}</div>
       </h2>
-      <form class="ui large form" method="post" action="">
-        <div class="ui segment" style="display: none">
-          <div class="field">
-            <h3>{{ result.title.rendered }}</h3>
-            <p>考试时长：{{ result.extended_custom_fields.extended_content.options.length + '分钟' }}&nbsp;&nbsp;&nbsp;题目数量：{{ result.extended_custom_fields.extended_content.links.length }}</p>
-            {{-- <p>考试有效期：{{ result.extended_custom_fields.extended_content.options.start + ' - ' + result.extended_custom_fields.extended_content.options.end }}</p> --}}
-          </div>
-          <div class="field">
-            <div class="ui left icon input">
-              <i class="user icon"></i>
-              <input type="text" name="IDNumber" placeholder="身份证号" autocomplete="off" />
-            </div>
-          </div>
-          <div class="field">
-            <div class="ui left icon input">
-              <i class="lock icon"></i>
-              <input type="password" name="password" placeholder="考试密码" autocomplete="off" />
-            </div>
-          </div>
-          {{ csrfField() }}
-          <button type="submit" name="button" class="ui fluid large teal submit button">登录</button>
+      <!-- <div class="ui segment">
+        <div class="field">
+          <h3>{{ result.title.rendered }}</h3>
+          <p>考试时长：{{ result.extended_custom_fields.extended_content.options.length + '分钟' }}&nbsp;&nbsp;&nbsp;题目数量：{{ result.extended_custom_fields.extended_content.links.length }}</p>
+          <p>考试有效期：{{ result.extended_custom_fields.extended_content.options.start + ' - ' + result.extended_custom_fields.extended_content.options.end }}</p>
         </div>
-        <div class="paper">
-          @each(entity in result.extended_custom_fields.extended_content.links)
-            <div class="ui segment segment-{{ $loop.index }}">
-              <div class="field">
-                <h3>{{ $loop.index + 1 }}. {{ entity.post_title }}</h3>
-                <p>{{{ entity.post_content }}}</p>
-              </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="text" name="IDNumber" placeholder="身份证号" autocomplete="off" />
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="lock icon"></i>
+            <input type="password" name="password" placeholder="考试密码" autocomplete="off" />
+          </div>
+        </div>
+        {{ csrfField() }}
+        <button type="submit" name="button" class="ui fluid large teal submit button">登录</button>
+      </div> -->
+      <div class="paper">
+        @each(entity in result.extended_custom_fields.extended_content.links)
+          <div class="ui segment segment-{{ $loop.index }}">
+            <div class="field">
+              <h3>{{ $loop.index + 1 }}. {{ entity.post_title }}</h3>
+              <p>{{{ entity.post_content }}}</p>
+            </div>
+            <div class="ui form">
               @if(result.extended_custom_fields.more_information[$loop.index].type.value == 1)
                 @!component('components.choices', {
                   index: $loop.index,
@@ -74,15 +78,12 @@
                 })
               @endif
             </div>
-          @endeach
-        </div>
-      </form>
+          </div>
+        @endeach
+      </div>
     </div>
   </div>
-  {{ script('https://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js') }}
-  {{-- {{ script('https://github.com/cburgmer/rasterizeHTML.js') }} --}}
-  {{-- {{ script('https://unpkg.com/jspdf@latest/dist/jspdf.min.js') }}
-  {{ script('https://html2canvas.hertzen.com/dist/html2canvas.min.js') }} --}}
+  {{ script('js/jquery/jquery-1.7.1.min') }}
   {{ script('semantic/dist/semantic.min') }}
   <script type="text/javascript">
     $('.ui.radio.checkbox').checkbox()
@@ -104,30 +105,9 @@
       $(this).click(function () {
         $('.grid-' + $(this)[0].dataset.subject).addClass('active')
         document.querySelector('.grid-' + $(this)[0].dataset.subject).dataset.subject = $(this)[0].dataset.item
+        $(".subject-" + $(this)[0].dataset.subject).attr("value", $(this)[0].dataset.item)
       })
     })
-
-    $("#submit").click(function () {
-      var num = 0
-      $('.grid.active').each((i) => {
-        if ($(".grid-" + i).data("subject") == $(".grid-" + i).data("true")) {
-          num ++
-        }
-        console.log('用户选择：' + $(".grid-" + i).data("subject") + '\t正确答案：' + $(".grid-" + i).data("true"))
-      })
-
-      if ($('.grid.active').length) {
-        console.log('您的成绩为：' + 100 / $('.grid.active').length * num)
-      }
-    })
-
-    // var pdf = new jsPDF('p', 'mm', 'a4');
-    // var print_content = $('body');
-    // var filename = 'hello.pdf';
-    //
-    // pdf.addHTML($('#ol_article_content'), function(){
-    //   pdf.output("save", filename)
-    // })
   </script>
 </body>
 </html>

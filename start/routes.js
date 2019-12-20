@@ -21,6 +21,8 @@ Route.get('/', 'IndexController.render')
 Route.group(() => {
   Route.get('/item/:id', 'PaperController.render')
   Route.post('/item/:id', 'PaperController.store')
+
+  Route.get('/result', 'ResultController.render')
 }).prefix('paper')
 
 Route.group(() => {

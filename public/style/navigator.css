@@ -22,6 +22,11 @@
   color: #FFF;
 }
 
+.ui.large.borderless.menu .grid.error {
+  background: #ff0000;
+  color: #FFF;
+}
+
 .ui.large.borderless.menu .container {
   display: flex;
   align-items: center;
