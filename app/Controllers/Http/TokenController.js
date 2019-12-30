@@ -338,7 +338,11 @@ class TokenController {
       {
         id: 7,
         text: '所有币种'
-      }
+      },
+      {
+        id: 8,
+        text: '用户管理'
+      },
     ]
     const route = '/console/token'
 
@@ -385,6 +389,24 @@ class TokenController {
         users,
         data: json.data,
         token: tokenKeyJson ? tokenKeyJson.data.Data : null
+      })
+    }
+
+    if (request.input('id') == 8) {
+      const result = await superagent.post(Env.get('BASE_URL') + 'v1/token/UserManagement')
+        .buffer(true)
+        .send(JSON.stringify({
+          "coin":  request.input('coin') || 'GDCC'
+        }))
+
+      const json = JSON.parse(result.text)
+      return view.render('token', {
+        navigation,
+        id: request.input('id') || 0,
+        route,
+        users,
+        data: json.data,
+        status: request.input('status') || ''
       })
     }
 

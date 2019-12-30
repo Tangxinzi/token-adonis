@@ -1,0 +1,39 @@
+<div class="ui form">
+  <div class="ui session active">
+    <div class="ui selection dropdown coin">
+      <input type="hidden" name="gender">
+      <i class="dropdown icon"></i>
+      <div class="default text">查看状态</div>
+      <div class="menu">
+        <div class="item" data-value="">所有币种</div>
+        <div class="item" data-value="0">GDCC</div>
+      </div>
+    </div>
+    <table class="ui fixed small selectable celled table">
+      <thead>
+        <tr>
+          <th class="one wide ui center aligned">币种</th>
+          <th class="two wide ui center aligned">手机号</th>
+          <th class="three wide ui center aligned">代币账户</th>
+          <th class="two wide ui center aligned">资产</th>
+          <th class="two wide ui center aligned">人民币</th>
+          <th class="two wide ui center aligned">美元</th>
+          <th class="one wide ui center aligned">认证</th>
+        </tr>
+      </thead>
+      <tbody>
+        @each(data in data.Data)
+          <tr data-label="{{ index }}">
+            <td data-label="coin" class="coin ui center aligned">{{ data.coin }}</td>
+            <td data-label="phone" class="ui center aligned">{{ data.phone }}</td>
+            <td data-label="address" class="ui center aligned">{{ data.address }}</td>
+            <td data-label="balance" class="ui center aligned">{{ data.balance }}</td>
+            <td data-label="cny" class="ui center aligned">¥{{ data.cny }}</td>
+            <td data-label="usd" class="ui center aligned">${{ data.usd }}</td>
+            <td data-label="grade" class="ui center aligned">{{ data.grade == 0 ? '未认证' : data.grade == 1 ? '初级认证' : '高级认证' }}</td>
+          </tr>
+        @endeach
+      </tbody>
+    </table>
+  </div>
+</div>

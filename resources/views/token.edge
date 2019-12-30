@@ -253,7 +253,7 @@
           <div class="ui form">
             <form class="ui fluid" method="post" action="{{ route }}">
               <div class="ui session active">
-                <div class="ui selection dropdown">
+                <div class="ui selection dropdown status">
                   <input type="hidden" name="gender">
                   <i class="dropdown icon"></i>
                   <div class="default text">查看状态</div>
@@ -416,6 +416,10 @@
             data,
             route
           })
+        @elseif(id == '8')
+          @!component('components.management', {
+            data
+          })
         @endif
       </div>
     </div>
@@ -425,13 +429,21 @@
   <script type="text/javascript">
     $('.ui.checkbox').checkbox()
     console.log({{ status }})
-    $('.ui.dropdown').dropdown({
+    $('.ui.dropdown.status').dropdown({
       clearable: true,
       action: function(text, value) {
         console.log(text, value, window.location)
         window.location.href = window.location.origin + window.location.pathname + '?id=6&status=' + value
       },
+    })
+    .dropdown('set selected', {{ status }} + '')
 
+    $('.ui.dropdown.coin').dropdown({
+      clearable: true,
+      action: function(text, value) {
+        console.log(text, value, window.location)
+        window.location.href = window.location.origin + window.location.pathname + '?id=8&coin=' + text + '&status=' + value
+      },
     })
     .dropdown('set selected', {{ status }} + '')
   </script>
