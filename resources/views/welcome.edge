@@ -12,15 +12,6 @@
       <img src="https://semantic-ui.com/examples/assets/images/logo.png" />
       <h2 class="ui header" style="margin-top: 0; margin-left: 15px; font-size: 20px;">网络考试平台</h2>
     </a>
-    <div class="right menu">
-      <div class="ui category search item">
-        <form class="ui transparent icon input" method="get" action="/detail/items">
-          <input class="prompt" name="wd" placeholder="搜索资源" autocomplete="off" />
-          <i class="search link icon"></i>
-        </form>
-        <div class="results"></div>
-      </div>
-    </div>
   </div>
   <div class="ui middle aligned center aligned grid" style="margin-top: 8%">
     <div class="six wide column">
@@ -49,28 +40,6 @@
           </div>
           {{ csrfField() }}
           <button type="submit" name="button" class="ui fluid large teal submit button">登录</button>
-        </div>
-        <div class="paper">
-          @each(entity in result.extended_custom_fields.extended_content.links)
-            <div class="ui segment">
-              <div class="field">
-                <h3>{{ entity.post_title }}</h3>
-                <p>{{{ entity.post_content }}}</p>
-              </div>
-              <div class="field">
-                <div class="ui left icon input">
-                  <i class="user icon"></i>
-                  <input type="text" name="IDNumber" placeholder="身份证号" autocomplete="off" />
-                </div>
-              </div>
-              <div class="field">
-                <div class="ui left icon input">
-                  <i class="lock icon"></i>
-                  <input type="password" name="password" placeholder="考试密码" autocomplete="off" />
-                </div>
-              </div>
-            </div>
-          @endeach
         </div>
       </form>
     </div>
