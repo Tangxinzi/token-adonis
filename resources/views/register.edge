@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>网络考试平台</title>
+  {{ style('semantic/dist/semantic.min') }}
+  {{ style('style') }}
+</head>
+<body>
+  @!component('components.navigator.nav')
+  <div class="ui middle aligned center aligned grid" style="margin-top: 8%">
+    <div class="six wide column">
+      <h2 class="ui teal image header">
+        <img src="https://semantic-ui.com/examples/assets/images/logo.png" class="image">
+        <div class="content">注册账号</div>
+      </h2>
+      <form class="ui large form" method="post" action="">
+        <div class="ui segment">
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="user icon"></i>
+              <input type="text" name="name" placeholder="姓名" autocomplete="off" />
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="mail icon"></i>
+              <input type="password" name="mail" placeholder="邮箱" autocomplete="off" />
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="lock icon"></i>
+              <input type="password" name="password" placeholder="登录密码" autocomplete="off" />
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="mobile icon"></i>
+              <input type="number" name="phone" placeholder="手机号（可选）" autocomplete="off" />
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="marker icon"></i>
+              <input type="text" name="address" placeholder="居住地址（可选）" autocomplete="off" />
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui input">
+              <input type="text" name="IDNumber" placeholder="身份证号（可选）" autocomplete="off" />
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui upward selection dropdown">
+              <input type="hidden" name="gender">
+              <i class="dropdown icon"></i>
+              <div class="default text">性别</div>
+              <div class="menu">
+                <div class="item" data-value="male" data-text="男">
+                  <i class="male icon"></i>
+                  男
+                </div>
+                <div class="item" data-value="female" data-text="女">
+                  <i class="female icon"></i>
+                  女
+                </div>
+              </div>
+            </div>
+          </div>
+          {{ csrfField() }}
+          <button type="submit" name="button" class="ui fluid large teal submit button">注册</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  {{ script('js/jquery/jquery-1.7.1.min') }}
+  {{ script('semantic/dist/semantic.min') }}
+  <script type="text/javascript">
+    $('.dropdown')
+      .dropdown({
+        // you can use any ui transition
+        transition: 'drop'
+      })
+    ;
+  </script>
+</body>
+</html>

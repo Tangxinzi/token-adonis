@@ -31,7 +31,7 @@ class PaperController {
   }
 
   async render ({ request, view, params }) {
-    result = await superagent.get('https://travelin-tute.ferer.net/wp-json/wp/v2/paper/' + params.id)
+    result = await superagent.get('http://localhost:8888/exam/wp-json/wp/v2/paper/' + params.id)
       .buffer(true)
       .send()
 

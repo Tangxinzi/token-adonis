@@ -17,10 +17,14 @@
 const Route = use('Route')
 
 Route.get('/', 'IndexController.render')
+Route.get('/login', 'LoginController.render')
+Route.post('/login', 'LoginController.store')
+Route.get('/register', 'RegisterController.render')
+Route.post('/register', 'RegisterController.store')
 
 Route.group(() => {
-  Route.get('/item/:id', 'PaperController.render')
-  Route.post('/item/:id', 'PaperController.store')
+  Route.get('/:id', 'PaperController.render')
+  Route.post('/:id', 'PaperController.store')
 
   Route.get('/result', 'ResultController.render')
 }).prefix('paper')

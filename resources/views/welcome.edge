@@ -5,43 +5,35 @@
   <title>网络考试平台</title>
   {{ style('semantic/dist/semantic.min') }}
   {{ style('style') }}
+  <style media="screen">
+    .ui.message {
+      transition: box-shadow .3s;
+    }
+
+    .ui.message:hover {
+      box-shadow: 0 0 5px #fff !important;
+    }
+  </style>
 </head>
 <body>
-  <div class="ui large borderless menu" style="border-radius: 0">
-    <a class="item" href="/">
-      <img src="https://semantic-ui.com/examples/assets/images/logo.png" />
-      <h2 class="ui header" style="margin-top: 0; margin-left: 15px; font-size: 20px;">网络考试平台</h2>
-    </a>
-  </div>
+  @!component('components.navigator.register')
   <div class="ui middle aligned center aligned grid" style="margin-top: 8%">
     <div class="six wide column">
       <h2 class="ui teal image header">
         <img src="https://semantic-ui.com/examples/assets/images/logo.png" class="image">
         <div class="content">登录考试平台</div>
       </h2>
-      <form class="ui large form" method="post" action="">
-        <div class="ui segment">
-          <div class="field">
-            <h3>{{ result.title.rendered }}</h3>
-            <p>考试时长：{{ result.extended_custom_fields.extended_content.options.length + '分钟' }}&nbsp;&nbsp;&nbsp;题目数量：{{ result.extended_custom_fields.extended_content.links.length }}</p>
-            {{-- <p>考试有效期：{{ result.extended_custom_fields.extended_content.options.start + ' - ' + result.extended_custom_fields.extended_content.options.end }}</p> --}}
-          </div>
-          <div class="field">
-            <div class="ui left icon input">
-              <i class="user icon"></i>
-              <input type="text" name="IDNumber" placeholder="身份证号" autocomplete="off" />
+        @each(entity in result)
+          <a class="ui left aligned grid blue message" href="/login?id={{ entity.id }}">
+            <div class="header">
+              {{ entity.title.rendered }}
             </div>
-          </div>
-          <div class="field">
-            <div class="ui left icon input">
-              <i class="lock icon"></i>
-              <input type="password" name="password" placeholder="考试密码" autocomplete="off" />
-            </div>
-          </div>
-          {{ csrfField() }}
-          <button type="submit" name="button" class="ui fluid large teal submit button">登录</button>
-        </div>
-      </form>
+            <ul class="list">
+              <li>考试时长：{{ entity.extended_custom_fields.extended_content.options.length }} 分钟</li>
+              <li>有效时间：{{ entity.extended_custom_fields.extended_content.options.start }} - {{ entity.extended_custom_fields.extended_content.options.end }}</li>
+            </ul>
+          </a>
+        @endeach
     </div>
   </div>
 </body>
