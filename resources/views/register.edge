@@ -12,20 +12,27 @@
     <div class="six wide column">
       <h2 class="ui teal image header">
         <img src="https://semantic-ui.com/examples/assets/images/logo.png" class="image">
-        <div class="content">注册账号</div>
+        <div class="content">注册账号 {{ result }}</div>
       </h2>
+      @if(flashMessage('message'))
+        @!component('components.alert', {
+          type: [flashMessage('type')],
+          header: [flashMessage('header')],
+          message: [flashMessage('message')]
+        })
+      @endif
       <form class="ui large form" method="post" action="">
         <div class="ui segment">
           <div class="field">
             <div class="ui left icon input">
               <i class="user icon"></i>
-              <input type="text" name="name" placeholder="姓名" autocomplete="off" />
+              <input type="text" name="username" placeholder="姓名" autocomplete="off" />
             </div>
           </div>
           <div class="field">
             <div class="ui left icon input">
               <i class="mail icon"></i>
-              <input type="password" name="mail" placeholder="邮箱" autocomplete="off" />
+              <input type="email" name="email" placeholder="邮箱" autocomplete="off" />
             </div>
           </div>
           <div class="field">
@@ -48,7 +55,7 @@
           </div>
           <div class="field">
             <div class="ui input">
-              <input type="text" name="IDNumber" placeholder="身份证号（可选）" autocomplete="off" />
+              <input type="text" name="number" placeholder="身份证号（可选）" autocomplete="off" />
             </div>
           </div>
           <div class="field">
@@ -57,11 +64,11 @@
               <i class="dropdown icon"></i>
               <div class="default text">性别</div>
               <div class="menu">
-                <div class="item" data-value="male" data-text="男">
+                <div class="item" data-value="1" data-text="男">
                   <i class="male icon"></i>
                   男
                 </div>
-                <div class="item" data-value="female" data-text="女">
+                <div class="item" data-value="0" data-text="女">
                   <i class="female icon"></i>
                   女
                 </div>
@@ -82,7 +89,10 @@
         // you can use any ui transition
         transition: 'drop'
       })
-    ;
+
+    $('.message .close').on('click', function() {
+      $(this).closest('.message').fadeOut()
+    })
   </script>
 </body>
 </html>

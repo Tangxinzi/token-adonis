@@ -20,6 +20,7 @@ Route.get('/', 'IndexController.render')
 Route.get('/login', 'LoginController.render')
 Route.post('/login', 'LoginController.store')
 Route.get('/register', 'RegisterController.render')
+Route.get('/register/result', 'RegisterController.result')
 Route.post('/register', 'RegisterController.store')
 
 Route.group(() => {
