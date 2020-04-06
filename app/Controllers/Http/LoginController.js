@@ -4,7 +4,31 @@ require('superagent-charset')(superagent)
 
 class LoginController {
   async store ({ request, view, response, session }) {
-    return response.redirect('/paper/' + request.input('id'))
+    const data = {
+      "username": request.input('username') || '',
+      "password": request.input('password') || ''
+    }
+
+    await superagent
+      .post('http://localhost:8888/exam/wp-json/jwt-auth/v1/token')
+      .type('application/json')
+      .send(data)
+      .then(res => {
+        response.redirect('/paper/' + request.input('id'), {
+          result: res.body
+        })
+      })
+      .catch(error => {
+        const text = JSON.parse(error.response.text)
+
+        session.flash({
+          type: 'red',
+          header: text.message,
+          message: JSON.stringify(text.data.status)
+        })
+
+        response.redirect('back')
+      })
   }
 
   async render ({ request, view, params }) {
@@ -12,7 +36,9 @@ class LoginController {
       .buffer(true)
       .send()
 
-    return view.render('login', {result: result.body})
+    return view.render('login', {
+      result: result.body
+    })
   }
 }
 

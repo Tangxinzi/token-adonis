@@ -14,6 +14,13 @@
         <img src="https://semantic-ui.com/examples/assets/images/logo.png" class="image">
         <div class="content">登录考试平台</div>
       </h2>
+      @if(flashMessage('message'))
+        @!component('components.alert', {
+          type: [flashMessage('type')],
+          header: [flashMessage('header')],
+          message: [flashMessage('message')]
+        })
+      @endif
       <form class="ui large form" method="post" action="">
         <div class="ui segment">
           <div class="field">
@@ -24,13 +31,19 @@
           <div class="field">
             <div class="ui left icon input">
               <i class="user icon"></i>
-              <input type="text" name="IDNumber" placeholder="身份证号" autocomplete="off" />
+              <input type="text" name="username" placeholder="姓名" autocomplete="off" />
             </div>
           </div>
           <div class="field">
             <div class="ui left icon input">
               <i class="lock icon"></i>
-              <input type="password" name="password" placeholder="考试密码" autocomplete="off" />
+              <input type="password" name="password" placeholder="登录密码" autocomplete="off" />
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="lock icon"></i>
+              <input type="password" name="examword" placeholder="考试密码" autocomplete="off" />
             </div>
           </div>
           {{ csrfField() }}
