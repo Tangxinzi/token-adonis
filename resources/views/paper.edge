@@ -9,18 +9,10 @@
   {{ style('style/paper') }}
 </head>
 <body class="body">
-  <div class="ui large borderless menu">
-    <a class="item" href="/">
-      <img src="https://semantic-ui.com/examples/assets/images/logo.png" />
-      <h2 class="ui header">网络考试平台&nbsp;&nbsp;·&nbsp;&nbsp;{{ result.title.rendered }}</h2>
-    </a>
-    <div class="right menu">
-      <div class="ui category search item">
-        <span id="answercard">答题卡 <i class="caret down icon"></i></span>
-        <span id="countdown" data-countdowntime="{{ result.extended_custom_fields.extended_content.options.length }}"></span>
-      </div>
-    </div>
-  </div>
+  @!component('components.navigator.login', {
+    users,
+    result
+  })
   <form class="ui large form borderless menu" method="post" action="#">
     <input type="text" name="length" value="{{ result.extended_custom_fields.extended_content.links.length }}" style="display: none">
     @each(entity in result.extended_custom_fields.extended_content.links)
@@ -31,6 +23,7 @@
       </div>
     @endeach
     <div class="right menu">
+      <span id="countdown" data-countdowntime="{{ result.extended_custom_fields.extended_content.options.length }}"></span>
       <div class="container">
         {{ csrfField() }}
         <button id="submit" type="submit" name="button" class="ui mini teal button">提交</button>
@@ -39,30 +32,6 @@
   </form>
   <div class="ui middle center aligned grid" style="margin-top: 8%">
     <div class="seven wide column">
-      <h2 class="ui teal image header">
-        <div class="content">{{ result.title.rendered }}</div>
-      </h2>
-      <!-- <div class="ui segment">
-        <div class="field">
-          <h3>{{ result.title.rendered }}</h3>
-          <p>考试时长：{{ result.extended_custom_fields.extended_content.options.length + '分钟' }}&nbsp;&nbsp;&nbsp;题目数量：{{ result.extended_custom_fields.extended_content.links.length }}</p>
-          <p>考试有效期：{{ result.extended_custom_fields.extended_content.options.start + ' - ' + result.extended_custom_fields.extended_content.options.end }}</p>
-        </div>
-        <div class="field">
-          <div class="ui left icon input">
-            <i class="user icon"></i>
-            <input type="text" name="IDNumber" placeholder="身份证号" autocomplete="off" />
-          </div>
-        </div>
-        <div class="field">
-          <div class="ui left icon input">
-            <i class="lock icon"></i>
-            <input type="password" name="password" placeholder="考试密码" autocomplete="off" />
-          </div>
-        </div>
-        {{ csrfField() }}
-        <button type="submit" name="button" class="ui fluid large teal submit button">登录</button>
-      </div> -->
       <div class="paper">
         @each(entity in result.extended_custom_fields.extended_content.links)
           <div class="ui segment segment-{{ $loop.index }}">

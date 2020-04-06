@@ -84,11 +84,7 @@
   {{ script('js/jquery/jquery-1.7.1.min') }}
   {{ script('semantic/dist/semantic.min') }}
   <script type="text/javascript">
-    $('.dropdown')
-      .dropdown({
-        // you can use any ui transition
-        transition: 'drop'
-      })
+    $('.dropdown').dropdown()
 
     $('.message .close').on('click', function() {
       $(this).closest('.message').fadeOut()

@@ -1,9 +1,10 @@
 'use strict'
 
-const Database     = use('Database')
+const Database      = use('Database')
 const superagent    = use('superagent')
 require('superagent-charset')(superagent)
 let result = null
+const Redis         = use('Redis')
 
 class PaperController {
   async store ({ request, view, response, session }) {
@@ -31,11 +32,15 @@ class PaperController {
   }
 
   async render ({ request, view, params }) {
-    result = await superagent.get('http://localhost:8888/exam/wp-json/wp/v2/paper/' + params.id)
+    result = await superagent.get('http://localhost:8888/exam/wp-json/wp/v2/paper/' + request.input('id'))
       .buffer(true)
       .send()
 
-    return view.render('paper', {result: result.body})
+    const users = await Redis.get('users')
+    return view.render('paper', {
+      result: result.body,
+      users: JSON.parse(users)
+    })
   }
 }
 

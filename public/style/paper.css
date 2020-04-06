@@ -37,3 +37,7 @@
   cursor: pointer;
   margin-right: 10px;
 }
+
+.ui.menu:not(.vertical) .right.menu {
+  align-items: center;
+}

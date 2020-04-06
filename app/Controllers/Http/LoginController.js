@@ -1,10 +1,12 @@
 'use strict'
 const superagent    = use('superagent')
 require('superagent-charset')(superagent)
+const Redis         = use('Redis')
 
 class LoginController {
   async store ({ request, view, response, session }) {
     const data = {
+      "id":       request.input('id'),
       "username": request.input('username') || '',
       "password": request.input('password') || ''
     }
@@ -13,10 +15,9 @@ class LoginController {
       .post('http://localhost:8888/exam/wp-json/jwt-auth/v1/token')
       .type('application/json')
       .send(data)
-      .then(res => {
-        response.redirect('/paper/' + request.input('id'), {
-          result: res.body
-        })
+      .then(users => {
+        Redis.set('users', JSON.stringify(users.body))
+        response.redirect('paper?id=' + data.id)
       })
       .catch(error => {
         const text = JSON.parse(error.response.text)

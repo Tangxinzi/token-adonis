@@ -17,6 +17,9 @@
 const Route = use('Route')
 
 Route.get('/', 'IndexController.render')
+Route.get('/user', 'UserController.render')
+
+
 Route.get('/login', 'LoginController.render')
 Route.post('/login', 'LoginController.store')
 Route.get('/register', 'RegisterController.render')
@@ -24,8 +27,8 @@ Route.get('/register/result', 'RegisterController.result')
 Route.post('/register', 'RegisterController.store')
 
 Route.group(() => {
-  Route.get('/:id', 'PaperController.render')
-  Route.post('/:id', 'PaperController.store')
+  Route.get('/', 'PaperController.render')
+  Route.post('/', 'PaperController.store')
 
   Route.get('/result', 'ResultController.render')
 }).prefix('paper')

@@ -52,5 +52,12 @@
       </form>
     </div>
   </div>
+  {{ script('js/jquery/jquery-1.7.1.min') }}
+  {{ script('semantic/dist/semantic.min') }}
+  <script type="text/javascript">
+    $('.message .close').on('click', function() {
+      $(this).closest('.message').fadeOut()
+    })
+  </script>
 </body>
 </html>
