@@ -9,30 +9,25 @@
   {{ style('style/paper') }}
 </head>
 <body class="body">
-  <div class="ui large borderless menu">
-    <a class="item" href="/">
-      <img src="https://semantic-ui.com/examples/assets/images/logo.png" />
-      <h2 class="ui header">网络考试平台</h2>
-    </a>
-    <div class="right menu">
-      <div class="ui category search item">
-
+  <header>
+    @!component('components.navigator.login', {
+      users,
+      result
+    })
+    <div class="ui large borderless menu">
+      @each(entity in result.extended_custom_fields.extended_content.links)
+        <div class="grid grid-{{ $loop.index }} {{ grid[$loop.index].res ? 'active' : 'error' }}" data-subject="" data-true="{{ result.extended_custom_fields.more_information[$loop.index].choices_true.value }}">
+          <small>{{ $loop.index + 1 }}</small>
+        </div>
+      @endeach
+      <div class="right menu">
+        <div class="container">
+          <button id="submit" type="submit" name="button" class="ui mini teal button">下载报告</button>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="ui large borderless menu">
-    @each(entity in result.extended_custom_fields.extended_content.links)
-      <div class="grid grid-{{ $loop.index }} {{ grid[$loop.index].res ? 'active' : 'error' }}" data-subject="" data-true="{{ result.extended_custom_fields.more_information[$loop.index].choices_true.value }}">
-        <small>{{ $loop.index + 1 }}</small>
-      </div>
-    @endeach
-    <div class="right menu">
-      <div class="container">
-        <button id="submit" type="submit" name="button" class="ui mini teal button">下载报告</button>
-      </div>
-    </div>
-  </div>
-  <div class="ui middle center aligned grid" style="margin-top: 8%">
+  </header>
+  <div class="ui middle center aligned grid" style="margin-top: 18%">
     <div class="seven wide column">
       <h2 class="ui teal image header">
         <div class="content">能力测试报告</div>
@@ -42,7 +37,7 @@
           <div class="field">
             <div class="ui statistic header field">
               <div class="value">
-                {{ achievement }}
+                {{ achievement || 0 }}
               </div>
               <div class="label">成绩</div>
             </div>
@@ -55,8 +50,15 @@
               <p>{{{ entity.post_content }}}</p>
             </div>
             <div class="ui form">
+              @if(result.extended_custom_fields.more_information[$loop.index].type.value == 0)
+                @!component('components.paper.judge', {
+                  index: $loop.index,
+                  grid: grid[$loop.index],
+                  judges: result.extended_custom_fields.more_information[$loop.index].judges
+                })
+              @endif
               @if(result.extended_custom_fields.more_information[$loop.index].type.value == 1)
-                @!component('components.choices', {
+                @!component('components.paper.choices', {
                   index: $loop.index,
                   grid: grid[$loop.index],
                   choices: result.extended_custom_fields.more_information[$loop.index].choices

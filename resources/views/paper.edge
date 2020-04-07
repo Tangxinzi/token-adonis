@@ -9,28 +9,38 @@
   {{ style('style/paper') }}
 </head>
 <body class="body">
-  @!component('components.navigator.login', {
-    users,
-    result
-  })
-  <form class="ui large form borderless menu" method="post" action="#">
-    <input type="text" name="length" value="{{ result.extended_custom_fields.extended_content.links.length }}" style="display: none">
-    @each(entity in result.extended_custom_fields.extended_content.links)
-      <div class="grid grid-{{ $loop.index }}" data-subject="" data-true="{{ result.extended_custom_fields.more_information[$loop.index].choices_true.value }}">
-        <small>{{ $loop.index + 1 }}</small>
-        <input type="text" name="subject-{{ $loop.index }}" value="" class="subject-{{ $loop.index }}" style="display: none">
-        <input type="text" name="true-{{ $loop.index }}" value="{{ result.extended_custom_fields.more_information[$loop.index].choices_true.value }}" style="display: none">
+  <header>
+    @!component('components.navigator.login', {
+      users,
+      result
+    })
+    <form class="ui large form borderless menu" method="post" action="#">
+      <input type="text" name="length" value="{{ result.extended_custom_fields.extended_content.links.length }}" style="display: none">
+      @each(entity in result.extended_custom_fields.extended_content.links)
+        @if(result.extended_custom_fields.more_information[$loop.index].type.value == "1")
+          <div class="grid grid-{{ $loop.index }}" data-subject="" data-true="{{ result.extended_custom_fields.more_information[$loop.index].choices_true.value }}">
+            <small>{{ $loop.index + 1 }}</small>
+            <input type="text" name="subject-{{ $loop.index }}" value="" class="subject-{{ $loop.index }}" style="display: none">
+            <input type="text" name="true-{{ $loop.index }}" value="{{ result.extended_custom_fields.more_information[$loop.index].choices_true.value }}" style="display: none">
+          </div>
+        @elseif(result.extended_custom_fields.more_information[$loop.index].type.value == "0")
+          <div class="grid grid-{{ $loop.index }}" data-subject="" data-true="{{ result.extended_custom_fields.more_information[$loop.index].judges.radio.value ? 1 : 0 }}">
+            <small>{{ $loop.index + 1 }}</small>
+            <input type="text" name="subject-{{ $loop.index }}" value="" class="subject-{{ $loop.index }}" style="display: none">
+            <input type="text" name="true-{{ $loop.index }}" value="{{ result.extended_custom_fields.more_information[$loop.index].judges.radio.value ? 1 : 0 }}" style="display: none">
+          </div>
+        @endif
+      @endeach
+      <div class="right menu">
+        <span id="countdown" data-countdowntime="{{ result.extended_custom_fields.extended_content.options.length }}"></span>
+        <div class="container">
+          {{ csrfField() }}
+          <button id="submit" type="submit" name="button" class="ui mini teal button">提交</button>
+        </div>
       </div>
-    @endeach
-    <div class="right menu">
-      <span id="countdown" data-countdowntime="{{ result.extended_custom_fields.extended_content.options.length }}"></span>
-      <div class="container">
-        {{ csrfField() }}
-        <button id="submit" type="submit" name="button" class="ui mini teal button">提交</button>
-      </div>
-    </div>
-  </form>
-  <div class="ui middle center aligned grid" style="margin-top: 8%">
+    </form>
+  </header>
+  <div class="ui middle center aligned grid" style="margin-top: 18%">
     <div class="seven wide column">
       <div class="paper">
         @each(entity in result.extended_custom_fields.extended_content.links)
@@ -40,8 +50,14 @@
               <p>{{{ entity.post_content }}}</p>
             </div>
             <div class="ui form">
+              @if(result.extended_custom_fields.more_information[$loop.index].type.value == 0)
+                @!component('components.paper.judge', {
+                  index: $loop.index,
+                  judges: result.extended_custom_fields.more_information[$loop.index].judges
+                })
+              @endif
               @if(result.extended_custom_fields.more_information[$loop.index].type.value == 1)
-                @!component('components.choices', {
+                @!component('components.paper.choices', {
                   index: $loop.index,
                   choices: result.extended_custom_fields.more_information[$loop.index].choices
                 })
@@ -70,7 +86,7 @@
       }
     }, 1000)
 
-    $(".paper .segment .choice").each(function (i) {
+    $(".paper .segment .item").each(function (i) {
       $(this).click(function () {
         $('.grid-' + $(this)[0].dataset.subject).addClass('active')
         document.querySelector('.grid-' + $(this)[0].dataset.subject).dataset.subject = $(this)[0].dataset.item

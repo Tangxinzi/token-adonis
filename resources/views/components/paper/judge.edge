@@ -1,0 +1,12 @@
+<div class="item choice field" data-subject="{{ index + 0 }}" data-item="1">
+  <div class="ui radio checkbox">
+    <input type="radio" name="judge_{{ index }}" class="hidden" {{ 1 == grid.subject ? 'checked' : '' }}>
+    <label>对</label>
+  </div>
+</div>
+<div class="item choice field" data-subject="{{ index + 0 }}" data-item="0">
+  <div class="ui radio checkbox">
+    <input type="radio" name="judge_{{ index }}" class="hidden" {{ 0 == grid.subject ? 'checked' : '' }}>
+    <label>错</label>
+  </div>
+</div>

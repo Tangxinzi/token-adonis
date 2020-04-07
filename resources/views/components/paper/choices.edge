@@ -1,0 +1,8 @@
+@each(choice in choices)
+  <div class="item choice field" data-subject="{{ index + 0 }}" data-item="{{ $loop.index }}">
+    <div class="ui radio checkbox" style="display: {{ choice ? 'block' : 'none' }}">
+      <input type="radio" name="choice_{{ index + 0 }}" class="hidden" {{ $loop.index == grid.subject ? 'checked' : '' }}>
+      <label>{{ choice }}</label>
+    </div>
+  </div>
+@endeach
