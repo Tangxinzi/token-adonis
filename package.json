@@ -30,6 +30,7 @@
     "@adonisjs/validator": "^5.0.6",
     "brew": "0.0.8",
     "cheerio": "^1.0.0-rc.3",
+    "exceljs": "^3.8.2",
     "moment": "^2.24.0",
     "mysql": "^2.17.1",
     "semantic-ui": "^2.4.2",

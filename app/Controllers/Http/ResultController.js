@@ -1,6 +1,6 @@
 'use strict'
 
-const Database     = use('Database')
+const Database      = use('Database')
 const superagent    = use('superagent')
 require('superagent-charset')(superagent)
 const Redis         = use('Redis')
@@ -10,7 +10,7 @@ class ResultController {
     const users = await Redis.get('users')
     return view.render('result', {
       users: JSON.parse(users)
-    })    
+    })
   }
 }
 

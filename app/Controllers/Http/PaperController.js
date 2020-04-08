@@ -4,6 +4,8 @@ const Database      = use('Database')
 const superagent    = use('superagent')
 require('superagent-charset')(superagent)
 const Redis         = use('Redis')
+const Excel         = use('exceljs')
+const Helpers       = use('Helpers')
 
 class PaperController {
   async store ({ request, view, response, session }) {
@@ -38,6 +40,50 @@ class PaperController {
       achievement,
       grid
     })
+  }
+
+  async download ({ response, request, view, params }) {
+    const workbook = new Excel.Workbook()
+    workbook.creator = 'test'
+    workbook.lastModifiedBy = 'test'
+    workbook.created = new Date()
+    workbook.modified = new Date()
+
+    let sheet = workbook.addWorksheet('test 表格')
+
+    // Add column headers and define column keys and widths
+    sheet.columns = [{
+        header: '创建日期',
+        key: 'create_time',
+        width: 15
+      },
+      {
+        header: '单号',
+        key: 'id',
+        width: 15
+      },
+      {
+        header: '电话号码',
+        key: 'phone',
+        width: 15
+      },
+      {
+        header: '地址',
+        key: 'address',
+        width: 15
+      }
+    ]
+    const data = [{
+      create_time: '2018-10-01',
+      id: '787818992109210',
+      phone: '11111111111',
+      address: '深圳市'
+    }]
+    // Add an array of rows
+    sheet.addRows(data)
+
+    await workbook.xlsx.writeFile(`${ Helpers.publicPath('uploads') }/test.xlsx`).then()
+    return response.attachment(`${ Helpers.publicPath('uploads') }/test.xlsx`)
   }
 
   async render ({ request, view, params }) {
