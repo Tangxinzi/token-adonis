@@ -1,5 +1,6 @@
 'use strict'
 
+const Env           = use('Env')
 const superagent    = use('superagent')
 require('superagent-charset')(superagent)
 const Redis         = use('Redis')

@@ -1,4 +1,6 @@
 'use strict'
+
+const Env           = use('Env')
 const superagent    = use('superagent')
 require('superagent-charset')(superagent)
 const Redis         = use('Redis')
@@ -12,7 +14,7 @@ class LoginController {
       "examword": request.input('examword') || ''
     }
 
-    var paper = await superagent.get('http://localhost:8888/exam/wp-json/wp/v2/paper/' + data.id)
+    var paper = await superagent.get(Env.get('BASE_URL') + '/exam/wp-json/wp/v2/paper/' + data.id)
     paper = JSON.parse(paper.text)
 
     if (paper.extended_custom_fields.extended_content.options.pass != data.examword) {
@@ -25,7 +27,7 @@ class LoginController {
       response.redirect('back')
     } else {
       await superagent
-        .post('http://localhost:8888/exam/wp-json/jwt-auth/v1/token')
+        .post(Env.get('BASE_URL') + '/exam/wp-json/jwt-auth/v1/token')
         .type('application/json')
         .send(data)
         .then(users => {
@@ -64,7 +66,7 @@ class LoginController {
   }
 
   async render ({ request, view, params }) {
-    const result = await superagent.get('http://localhost:8888/exam/wp-json/wp/v2/paper/' + request.input('id'))
+    const result = await superagent.get(Env.get('BASE_URL') + '/exam/wp-json/wp/v2/paper/' + request.input('id'))
       .buffer(true)
       .send()
 

@@ -1,11 +1,13 @@
 'use strict'
-const moment    = use('moment')
+
+const Env           = use('Env')
+const moment        = use('moment')
 const superagent    = use('superagent')
 require('superagent-charset')(superagent)
 
 class IndexController {
   async render ({ request, view, params }) {
-    var result = await superagent.get('http://localhost:8888/exam/wp-json/wp/v2/paper/')
+    var result = await superagent.get(Env.get('BASE_URL') + '/exam/wp-json/wp/v2/paper/')
       .buffer(true)
       .send()
 
@@ -19,7 +21,7 @@ class IndexController {
   }
 
   async login ({ request, view, params }) {
-    var result = await superagent.get('http://localhost:8888/exam/wp-json/wp/v2/paper/' + request.input('id'))
+    var result = await superagent.get(Env.get('BASE_URL') + '/exam/wp-json/wp/v2/paper/' + request.input('id'))
       .buffer(true)
       .send()
 

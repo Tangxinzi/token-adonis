@@ -1,5 +1,6 @@
 'use strict'
 
+const Env           = use('Env')
 const Database      = use('Database')
 const superagent    = use('superagent')
 require('superagent-charset')(superagent)
@@ -26,7 +27,7 @@ class PaperController {
       }
     }
 
-    const result = await superagent.get('http://localhost:8888/exam/wp-json/wp/v2/paper/' + request.input('id'))
+    const result = await superagent.get(Env.get('BASE_URL') + '/exam/wp-json/wp/v2/paper/' + request.input('id'))
       .buffer(true)
       .send()
 
@@ -87,7 +88,7 @@ class PaperController {
   }
 
   async render ({ request, view, params }) {
-    const result = await superagent.get('http://localhost:8888/exam/wp-json/wp/v2/paper/' + request.input('id'))
+    const result = await superagent.get(Env.get('BASE_URL') + '/exam/wp-json/wp/v2/paper/' + request.input('id'))
       .buffer(true)
       .send()
 

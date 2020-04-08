@@ -1,4 +1,6 @@
 'use strict'
+
+const Env           = use('Env')
 const superagent    = use('superagent')
 require('superagent-charset')(superagent)
 
@@ -17,7 +19,7 @@ class RegisterController {
     }
 
     await superagent
-      .post('http://localhost:8888/exam/wp-json/users/v1/register')
+      .post(Env.get('BASE_URL') + '/exam/wp-json/users/v1/register')
       .type('application/json')
       .send(data)
       .then(res => {

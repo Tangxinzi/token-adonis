@@ -1,5 +1,6 @@
 'use strict'
 
+const Env           = use('Env')
 const Database      = use('Database')
 const superagent    = use('superagent')
 require('superagent-charset')(superagent)
