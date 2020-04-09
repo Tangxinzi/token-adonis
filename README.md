@@ -1,5 +1,5 @@
 <h1 align="center">网络考试平台</h1>
-应用依赖的是 Adonis.Js 框架，Adonis.Js 是一个可以运行在所有主流操作系统上的 Node.Js MVC 框架。程序使用 MySQL 数据库，请在 `.env` 文件中配置数据库参数，另外还需安装 `Redis` 缓存本地数据使用。
+应用依赖的是 Adonis.Js 框架，Adonis.Js 是一个可以运行在所有主流操作系统上的 Node.Js MVC 框架。程序使用 MySQL 数据库，请在 .env 文件中配置数据库参数，另外还需安装 Redis 缓存本地数据使用。
 
 该应用前端主要展示以下功能
 ----
