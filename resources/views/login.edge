@@ -23,11 +23,13 @@
       @endif
       <form class="ui large form" method="post" action="">
         <div class="ui segment">
-          <div class="field">
-            <h3>{{ result.title.rendered }}</h3>
-            <p>考试时长：{{ result.extended_custom_fields.extended_content.options.length + '分钟' }}&nbsp;&nbsp;&nbsp;题目数量：{{ result.extended_custom_fields.extended_content.links.length }}</p>
-            {{-- <p>考试有效期：{{ result.extended_custom_fields.extended_content.options.start + ' - ' + result.extended_custom_fields.extended_content.options.end }}</p> --}}
-          </div>
+          @if(result)
+            <div class="field">
+              <h3>{{ result.title.rendered }}</h3>
+              <p>考试时长：{{ result.extended_custom_fields.extended_content.options.length + '分钟' }}&nbsp;&nbsp;&nbsp;题目数量：{{ result.extended_custom_fields.extended_content.links.length }}</p>
+              <p>有效时间：{{ result.extended_custom_fields.extended_content.options.start + '　-　' + result.extended_custom_fields.extended_content.options.end }}</p>
+            </div>
+          @endif
           <div class="field">
             <div class="ui left icon input">
               <i class="user icon"></i>
@@ -40,12 +42,14 @@
               <input type="password" name="password" placeholder="登录密码" autocomplete="off" />
             </div>
           </div>
-          <div class="field">
-            <div class="ui left icon input">
-              <i class="lock icon"></i>
-              <input type="password" name="examword" placeholder="考试密码" autocomplete="off" />
+          @if(result)
+            <div class="field">
+              <div class="ui left icon input">
+                <i class="lock icon"></i>
+                <input type="password" name="examword" placeholder="考试密码" autocomplete="off" />
+              </div>
             </div>
-          </div>
+          @endif
           {{ csrfField() }}
           <button type="submit" name="button" class="ui fluid large teal submit button">登录</button>
         </div>

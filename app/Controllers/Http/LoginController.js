@@ -4,6 +4,7 @@ const Env           = use('Env')
 const superagent    = use('superagent')
 require('superagent-charset')(superagent)
 const Redis         = use('Redis')
+const Route = use('Route')
 
 class LoginController {
   async store ({ request, view, response, session }) {
@@ -12,6 +13,19 @@ class LoginController {
       "username": request.input('username') || '',
       "password": request.input('password') || '',
       "examword": request.input('examword') || ''
+    }
+
+    if (request.input('examword') == undefined && request.input('id') == undefined) {
+      await superagent
+        .post(Env.get('BASE_URL') + '/exam/wp-json/jwt-auth/v1/token')
+        .type('application/json')
+        .send(data)
+        .then(users => {
+          Redis.set('users', JSON.stringify(users.body))
+          response.route('user')
+        })
+
+      return
     }
 
     var paper = await superagent.get(Env.get('BASE_URL') + '/exam/wp-json/wp/v2/paper/' + data.id)
@@ -66,13 +80,17 @@ class LoginController {
   }
 
   async render ({ request, view, params }) {
-    const result = await superagent.get(Env.get('BASE_URL') + '/exam/wp-json/wp/v2/paper/' + request.input('id'))
-      .buffer(true)
-      .send()
+    if (request.input('id')) {
+      const result = await superagent.get(Env.get('BASE_URL') + '/exam/wp-json/wp/v2/paper/' + request.input('id'))
+        .buffer(true)
+        .send()
 
-    return view.render('login', {
-      result: result.body
-    })
+      return view.render('login', {
+        result: result.body
+      })
+    } else {
+      return view.render('login')
+    }
   }
 }
 

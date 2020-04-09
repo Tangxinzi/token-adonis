@@ -32,11 +32,17 @@
         @endif
       @endeach
       <div class="right menu">
-        <span id="countdown" data-countdowntime="{{ result.extended_custom_fields.extended_content.options.length }}"></span>
-        <div class="container">
-          {{ csrfField() }}
-          <button id="submit" type="submit" name="button" class="ui mini teal button">提交</button>
-        </div>
+        @if(!paper)
+          <span id="countdown" data-countdowntime="{{ result.extended_custom_fields.extended_content.options.length }}"></span>
+          <div class="container">
+            {{ csrfField() }}
+            <button id="submit" type="submit" name="button" class="ui mini teal button">提交</button>
+          </div>
+        @else
+          <div class="container">
+            <button id="submit" type="submit" name="button" class="ui mini teal button" disabled>您已参与过当前考试，无法提交</button>
+          </div>
+        @endif
       </div>
     </form>
   </header>

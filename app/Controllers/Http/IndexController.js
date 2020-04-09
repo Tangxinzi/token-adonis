@@ -1,6 +1,7 @@
 'use strict'
 
 const Env           = use('Env')
+const Redis         = use('Redis')
 const moment        = use('moment')
 const superagent    = use('superagent')
 require('superagent-charset')(superagent)
@@ -16,6 +17,8 @@ class IndexController {
         result.body.splice(i, 1)
       }
     }
+
+    Redis.del('users')
 
     return view.render('welcome', {result: result.body})
   }

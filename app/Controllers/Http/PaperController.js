@@ -141,9 +141,14 @@ class PaperController {
       .send()
 
     const users = JSON.parse(await Redis.get('users'))
+    const paper = await Database.from('ex_paper').where({
+      user_id: users.id,
+      posts_id: result.body.id
+    })
 
     return view.render('paper', {
       result: result.body,
+      paper: paper.length,
       users
     })
   }

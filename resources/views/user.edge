@@ -5,6 +5,16 @@
   <title>网络考试平台</title>
   {{ style('semantic/dist/semantic.min') }}
   {{ style('style') }}
+  <style media="screen">
+    .ui.message {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .ui.message .content {
+      text-align: left;
+    }
+  </style>
 </head>
 <body>
   @!component('components.navigator.nav')
@@ -16,9 +26,12 @@
           header: [flashMessage('header')],
           message: [flashMessage('message')]
         })
-      @endif      
+      @endif
       <form class="ui large form" method="post" action="">
         <div class="ui segment">
+          <div class="field">
+            <h3>个人信息</h3>
+          </div>
           <div class="field">
             <div class="ui left icon input">
               <i class="user icon"></i>
@@ -69,6 +82,26 @@
           <button type="submit" name="button" class="ui fluid large teal submit button">更新</button>
         </div>
       </form>
+      @if(paper.length)
+        <div class="ui segment">
+          <div class="field">
+            <h3>历史考试</h3>
+          </div>
+          @each(entity in paper)
+          <div class="ui blue message">
+            <div class="content">
+              <div class="header">
+                {{ entity.paper_title }}
+              </div>
+              <p>提交时间：{{ entity.created_time }}</p>
+            </div>
+            <a href="/paper/{{ entity.posts_id }}/download">
+              <i class="download icon"></i>
+            </a>
+          </div>
+          @endeach
+        </div>
+      @endif
     </div>
   </div>
   {{ script('js/jquery/jquery-1.7.1.min') }}
