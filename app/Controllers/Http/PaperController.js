@@ -34,37 +34,48 @@ class PaperController {
     const achievement = 100 / request.input('length') * num
     // console.log('您的成绩为：' + achievement)
 
-    const users = await Redis.get('users')
+    const users = JSON.parse(await Redis.get('users'))
+
+    await Database
+      .table('ex_paper')
+      .insert({
+        posts_id: request.input('id'),
+        user_id: users.id,
+        paper_title: result.body.title.rendered,
+        achievement,
+        created_time: new Date().toLocaleString()
+      })
+
     return view.render('result', {
       result: result.body,
-      users: JSON.parse(users),
       achievement,
+      users,
       grid
     })
   }
 
-  async download ({ response, request, view, params }) {
+  async download ({ request, view, response, session, params }) {
     const workbook = new Excel.Workbook()
     workbook.creator = 'test'
     workbook.lastModifiedBy = 'test'
     workbook.created = new Date()
     workbook.modified = new Date()
 
-    let sheet = workbook.addWorksheet('test 表格')
+    let sheet = workbook.addWorksheet('成绩单')
 
     // Add column headers and define column keys and widths
     sheet.columns = [{
-        header: '创建日期',
-        key: 'create_time',
+        header: '姓名',
+        key: 'username',
         width: 15
       },
       {
-        header: '单号',
-        key: 'id',
+        header: '邮箱',
+        key: 'email',
         width: 15
       },
       {
-        header: '电话号码',
+        header: '手机号',
         key: 'phone',
         width: 15
       },
@@ -72,19 +83,56 @@ class PaperController {
         header: '地址',
         key: 'address',
         width: 15
+      },
+      {
+        header: '身份证号',
+        key: 'number',
+        width: 15
+      },
+      {
+        header: '性别',
+        key: 'gender',
+        width: 15
+      },
+      {
+        header: '考试',
+        key: 'paper_title',
+        width: 30
+      },
+      {
+        header: '成绩',
+        key: 'achievement',
+        width: 15
+      },
+      {
+        header: '考试时间',
+        key: 'created_time',
+        width: 15
       }
     ]
+
+    const users = JSON.parse(await Redis.get('users'))
+    const paper = await Database.from('ex_paper').where({
+      posts_id: params.id,
+      user_id: users.id
+    }).first()
+
     const data = [{
-      create_time: '2018-10-01',
-      id: '787818992109210',
-      phone: '11111111111',
-      address: '深圳市'
+      username: users.user_nicename,
+      email: users.user_email,
+      phone: users.info.phone,
+      address: users.info.address,
+      number: users.info.number,
+      gender: users.info.gender === '1' ? '男' : users.info.gender === '0' ? '女' : '',
+      paper_title: paper.paper_title,
+      achievement: paper.achievement,
+      created_time: paper.created_time
     }]
     // Add an array of rows
     sheet.addRows(data)
 
-    await workbook.xlsx.writeFile(`${ Helpers.publicPath('uploads') }/test.xlsx`).then()
-    return response.attachment(`${ Helpers.publicPath('uploads') }/test.xlsx`)
+    await workbook.xlsx.writeFile(`${ Helpers.publicPath('uploads') }/${ paper.created_time } ${ paper.paper_title }.xlsx`).then()
+    return response.attachment(`${ Helpers.publicPath('uploads') }/${ paper.created_time } ${ paper.paper_title }.xlsx`)
   }
 
   async render ({ request, view, params }) {
@@ -92,10 +140,11 @@ class PaperController {
       .buffer(true)
       .send()
 
-    const users = await Redis.get('users')
+    const users = JSON.parse(await Redis.get('users'))
+
     return view.render('paper', {
       result: result.body,
-      users: JSON.parse(users)
+      users
     })
   }
 }
