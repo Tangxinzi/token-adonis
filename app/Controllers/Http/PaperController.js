@@ -9,6 +9,18 @@ const Excel         = use('exceljs')
 const Helpers       = use('Helpers')
 
 class PaperController {
+  async get_user_meta (user_id, meta_key) {
+    const result = await Database
+      .table('ex_usermeta')
+      .select('*')
+      .where({
+        user_id,
+        meta_key
+      })
+
+    return result[0] ? result[0].meta_value : ''
+  }
+
   async store ({ request, view, response, session }) {
     var num = 0, grid = []
     for (var i = 0; i < request.input('length'); i++) {
@@ -133,6 +145,96 @@ class PaperController {
 
     await workbook.xlsx.writeFile(`${ Helpers.publicPath('uploads') }/${ paper.created_time } ${ paper.paper_title }.xlsx`).then()
     return response.attachment(`${ Helpers.publicPath('uploads') }/${ paper.created_time } ${ paper.paper_title }.xlsx`)
+  }
+
+  async all ({ request, view, response, session, params }) {
+    const users = JSON.parse(await Redis.get('users'))
+    if(users.user_caps.administrator) {
+      const workbook = new Excel.Workbook()
+      workbook.creator = 'test'
+      workbook.lastModifiedBy = 'test'
+      workbook.created = new Date()
+      workbook.modified = new Date()
+
+      let sheet = workbook.addWorksheet('成绩单')
+
+      // Add column headers and define column keys and widths
+      sheet.columns = [{
+          header: '姓名',
+          key: 'username',
+          width: 15
+        },
+        {
+          header: '邮箱',
+          key: 'email',
+          width: 15
+        },
+        {
+          header: '手机号',
+          key: 'phone',
+          width: 15
+        },
+        {
+          header: '地址',
+          key: 'address',
+          width: 15
+        },
+        {
+          header: '身份证号',
+          key: 'number',
+          width: 15
+        },
+        {
+          header: '性别',
+          key: 'gender',
+          width: 15
+        },
+        {
+          header: '考试',
+          key: 'paper_title',
+          width: 30
+        },
+        {
+          header: '成绩',
+          key: 'achievement',
+          width: 15
+        },
+        {
+          header: '考试时间',
+          key: 'created_time',
+          width: 15
+        }
+      ]
+
+      var papers = []
+      var paper = await Database.raw("SELECT DISTINCT(P.user_id), user_nicename, user_email, paper_title, achievement, created_time FROM ex_paper AS P INNER JOIN ex_users AS U ON (P.user_id = U.id) where posts_id = ?", params.id)
+      for (var i = 0; i < paper[0].length; i++) {
+        papers.push({
+          username: paper[0][i].user_nicename,
+          email: paper[0][i].user_email,
+          phone: await this.get_user_meta(paper[0][i].user_id, 'info_phone'),
+          address: await this.get_user_meta(paper[0][i].user_id, 'info_address'),
+          number: await this.get_user_meta(paper[0][i].user_id, 'info_number'),
+          gender: await this.get_user_meta(paper[0][i].user_id, 'info_gender') === '1' ? '男' : await this.get_user_meta(paper[0][i].user_id, 'info_gender') === '0' ? '女' : '',
+          paper_title: paper[0][i].paper_title,
+          achievement: paper[0][i].achievement,
+          created_time: paper[0][i].created_time
+        })
+      }
+      // Add an array of rows
+      sheet.addRows(papers)
+
+      await workbook.xlsx.writeFile(`${ Helpers.publicPath('uploads') }/${ paper[0][0].paper_title }.xlsx`).then()
+      return response.attachment(`${ Helpers.publicPath('uploads') }/${ paper[0][0].paper_title }.xlsx`)
+    } else {
+      session.flash({
+        type: 'red',
+        header: 'error',
+        message: '无权限'
+      })
+
+      response.redirect('back')
+    }
   }
 
   async render ({ request, view, params }) {

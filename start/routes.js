@@ -28,8 +28,8 @@ Route.post('/register', 'RegisterController.store')
 
 Route.group(() => {
   Route.get('/', 'PaperController.render')
+  Route.get('/:id/all', 'PaperController.all')
   Route.get('/:id/download', 'PaperController.download')
-    .as('download')
   Route.post('/', 'PaperController.store')
 
   Route.get('/result', 'ResultController.render')
