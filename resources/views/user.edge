@@ -78,10 +78,40 @@
               </div>
             </div>
           </div>
+          @if(users.user_caps.administrator)
+            <div class="field">
+              <div class="ui input">
+                <input type="text" name="administrator" value="管理员" placeholder="身份" disabled="disabled" autocomplete="off" />
+              </div>
+            </div>
+          @endif
           {{ csrfField() }}
           <button type="submit" name="button" class="ui fluid large teal submit button">更新</button>
         </div>
       </form>
+      @if(users.user_caps.administrator)
+        <div class="ui segment">
+          <div class="field">
+            <h3>考试信息</h3>
+          </div>
+          @each(entity in posts)
+          <div class="ui blue message">
+            <div class="content">
+              <div class="header">
+                {{ entity.post_title }}
+              </div>
+              <ul class="list">
+                <li>考试人数：{{ entity.count || 0 }}</li>
+                <li>创建时间：{{ entity.post_date }}</li>
+              </ul>
+            </div>
+            <a href="#">
+              <i class="download icon"></i>
+            </a>
+          </div>
+          @endeach
+        </div>
+      @endif
       @if(paper.length)
         <div class="ui segment">
           <div class="field">

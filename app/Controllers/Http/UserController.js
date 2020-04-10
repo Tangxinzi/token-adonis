@@ -45,7 +45,8 @@ class UserController {
         address: rows.info_address,
         number: rows.info_number,
         gender: rows.info_gender
-      }
+      },
+      user_caps: users.user_caps
     }))
 
     session.flash({
@@ -61,10 +62,20 @@ class UserController {
     const users = JSON.parse(await Redis.get('users'))
     const paper = await Database.from('ex_paper').where({ user_id: users.id })
 
-    return view.render('user', {
-      users,
-      paper
-    })
+    if (users.user_caps.administrator) {
+      const posts = await Database.raw("SELECT ID, DATE_FORMAT(post_date, '%Y-%m-%d %H:%i:%s') as post_date, post_title, count FROM (select * from ex_posts where post_type = 'paper' and post_status = 'publish' ORDER BY post_date ASC) AS A LEFT JOIN (SELECT posts_id, COUNT(*) as count FROM ex_paper GROUP BY posts_id) AS B ON A.ID = B.posts_id")
+
+      return view.render('user', {
+        users,
+        paper,
+        posts: posts[0]
+      })
+    } else {
+      return view.render('user', {
+        users,
+        paper
+      })
+    }
   }
 }
 

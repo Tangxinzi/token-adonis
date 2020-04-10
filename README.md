@@ -7,12 +7,13 @@
 - 形成若干套试题套卷
 - 学生答题并提交试卷
 - 试卷提交后即打印相应分数，下载 `Excel` 表格
-- 管理员下载学生信息及考试成绩
+- 管理员管理学生信息及考试成绩
 - 注册、更新账号信息
 
 ![网络考试平台](./public/images/overview/index.png)
 ![登录考试平台](./public/images/overview/login.png)
 ![考试平台](./public/images/overview/paper.png)
+![个人信息](./public/images/overview/user.png)
 
 后端
 ---
@@ -45,6 +46,7 @@ redis-server
 cp .env.example .env
 adonis key:generate
 adonis serve --dev
+→ info: serving app on http://127.0.0.1:3333
 ```
 
 如果提示没有找到 `adonis` 命令，您需要先去安装一下。
@@ -52,7 +54,7 @@ adonis serve --dev
 npm install @adonisjs/cli --global
 ```
 
-.env 文件配置本地访问及开发端口，使用 MySQL 另需配置 DB 参数数据
+.env 文件配置本地访问及开发端口，使用 MySQL 另需配置 DB 参数数据。
 ```
 HOST=127.0.0.1
 PORT=3333
