@@ -18,24 +18,13 @@ class RegisterController {
     	}
     }
 
-    await superagent
+    const result = await superagent
       .post(Env.get('BASE_URL') + '/exam/wp-json/users/v1/register')
       .type('application/json')
       .send(data)
-      .then(res => {
-        const text = JSON.parse(error.response.res.text)
-        console.log(text)
-
-        session.flash({
-          type: 'blue',
-          header: '创建成功',
-          message: null
-        })
-
-        response.redirect('back')
-      })
-      .catch(error => {
-        const text = JSON.parse(error.response.res.text)
+      .catch(err => {
+        console.log(err.status)
+        const text = JSON.parse(err.response.res.text)
         switch (text.code) {
           case 'rest_invalid_param':
             session.flash({
@@ -55,6 +44,16 @@ class RegisterController {
 
         response.redirect('back')
       })
+
+    if (result) {
+      session.flash({
+        type: 'blue',
+        header: '创建成功',
+        message:  `<a href="/login">登录账号</a>`
+      })
+
+      response.redirect('back')
+    }
   }
 
   render ({ request, view, params }) {
