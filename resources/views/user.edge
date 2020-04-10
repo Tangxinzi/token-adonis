@@ -32,6 +32,14 @@
           <div class="field">
             <h3>个人信息</h3>
           </div>
+          @if(users.user_caps.administrator)
+            <div class="field">
+              <div class="ui left icon input">
+                <i class="options icon"></i>
+                <input type="text" name="administrator" value="管理员" placeholder="身份" disabled="disabled" autocomplete="off" />
+              </div>
+            </div>
+          @endif
           <div class="field">
             <div class="ui left icon input">
               <i class="user icon"></i>
@@ -65,7 +73,7 @@
             <div class="ui upward selection dropdown">
               <input type="hidden" name="info_gender">
               <i class="dropdown icon"></i>
-              <div class="default text">性别</div>
+              <div class="default text">性别（可选）</div>
               <div class="menu">
                 <div class="item" data-value="1" data-text="男">
                   <i class="male icon"></i>
@@ -78,13 +86,6 @@
               </div>
             </div>
           </div>
-          @if(users.user_caps.administrator)
-            <div class="field">
-              <div class="ui input">
-                <input type="text" name="administrator" value="管理员" placeholder="身份" disabled="disabled" autocomplete="off" />
-              </div>
-            </div>
-          @endif
           {{ csrfField() }}
           <button type="submit" name="button" class="ui fluid large teal submit button">更新</button>
         </div>
@@ -105,7 +106,7 @@
                 <li>创建时间：{{ entity.post_date }}</li>
               </ul>
             </div>
-            <a href="#">
+            <a href="/paper/{{ entity.ID }}/all">
               <i class="download icon"></i>
             </a>
           </div>
