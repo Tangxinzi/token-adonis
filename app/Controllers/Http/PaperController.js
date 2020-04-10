@@ -143,8 +143,8 @@ class PaperController {
     // Add an array of rows
     sheet.addRows(data)
 
-    await workbook.xlsx.writeFile(`${ Helpers.publicPath('uploads') }/${ paper.created_time } ${ paper.paper_title }.xlsx`).then()
-    return response.attachment(`${ Helpers.publicPath('uploads') }/${ paper.created_time } ${ paper.paper_title }.xlsx`)
+    await workbook.xlsx.writeFile(`${ Helpers.publicPath('uploads') }/${ paper.paper_title }.xlsx`).then()
+    return response.attachment(`${ Helpers.publicPath('uploads') }/${ paper.paper_title }.xlsx`)
   }
 
   async all ({ request, view, response, session, params }) {
