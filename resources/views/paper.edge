@@ -14,7 +14,7 @@
       users,
       result
     })
-    <form class="ui large form borderless menu" method="post" action="#">
+    <form class="ui large form borderless menu" name="form" method="post" action="#">
       <input type="text" name="length" value="{{ result.extended_custom_fields.extended_content.links.length }}" style="display: none">
       @each(entity in result.extended_custom_fields.extended_content.links)
         @if(result.extended_custom_fields.more_information[$loop.index].type.value == "1")
@@ -28,6 +28,12 @@
             <small>{{ $loop.index + 1 }}</small>
             <input type="text" name="subject-{{ $loop.index }}" value="" class="subject-{{ $loop.index }}" style="display: none">
             <input type="text" name="true-{{ $loop.index }}" value="{{ result.extended_custom_fields.more_information[$loop.index].judges.radio.value ? 1 : 0 }}" style="display: none">
+          </div>
+        @elseif(result.extended_custom_fields.more_information[$loop.index].type.value == "2")
+          <div class="grid grid-{{ $loop.index }}" data-subject="" data-true="{{ result.extended_custom_fields.more_information[$loop.index].blanks }}">
+            <small>{{ $loop.index + 1 }}</small>
+            <input type="text" name="subject-{{ $loop.index }}" value="" class="subject-{{ $loop.index }}" style="display: none">
+            <input type="text" name="true-{{ $loop.index }}" value="{{ result.extended_custom_fields.more_information[$loop.index].blanks }}" style="display: none">
           </div>
         @endif
       @endeach
@@ -68,6 +74,12 @@
                   choices: result.extended_custom_fields.more_information[$loop.index].choices
                 })
               @endif
+              @if(result.extended_custom_fields.more_information[$loop.index].type.value == 2)
+                @!component('components.paper.blanks', {
+                  index: $loop.index,
+                  blanks: result.extended_custom_fields.more_information[$loop.index].blanks
+                })
+              @endif
             </div>
           </div>
         @endeach
@@ -79,6 +91,7 @@
   <script type="text/javascript">
     $('.ui.radio.checkbox').checkbox()
 
+    // 倒计时
     var a = 0, m = 0, s = 1, limitMinute = $("#countdown").data("countdowntime")
     this.interval = setInterval(() => {
       if (m * 60 + s == 0) {
@@ -92,11 +105,17 @@
       }
     }, 1000)
 
+    // 设置选项
     $(".paper .segment .item").each(function (i) {
       $(this).click(function () {
         $('.grid-' + $(this)[0].dataset.subject).addClass('active')
         document.querySelector('.grid-' + $(this)[0].dataset.subject).dataset.subject = $(this)[0].dataset.item
         $(".subject-" + $(this)[0].dataset.subject).attr("value", $(this)[0].dataset.item)
+      })
+
+      $('.blanks_' + i).on("input propertychange", function () {
+        document.querySelector('.grid-' + i).dataset.subject = $('.blanks_' + i)[0].value
+        $(".subject-" + i).attr("value", $('.blanks_' + i)[0].value)
       })
     })
   </script>

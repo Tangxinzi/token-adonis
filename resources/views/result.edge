@@ -64,6 +64,13 @@
                   choices: result.extended_custom_fields.more_information[$loop.index].choices
                 })
               @endif
+              @if(result.extended_custom_fields.more_information[$loop.index].type.value == 2)
+                @!component('components.paper.blanks', {
+                  index: $loop.index,
+                  grid: grid[$loop.index],
+                  blanks: result.extended_custom_fields.more_information[$loop.index].blanks
+                })
+              @endif
             </div>
           </div>
         @endeach

@@ -54,13 +54,13 @@ class PaperController {
         posts_id: request.input('id'),
         user_id: users.id,
         paper_title: result.body.title.rendered,
-        achievement,
+        achievement: parseInt(achievement),
         created_time: new Date().toLocaleString()
       })
 
     return view.render('result', {
       result: result.body,
-      achievement,
+      achievement: parseInt(achievement),
       users,
       grid
     })
