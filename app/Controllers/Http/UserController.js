@@ -4,6 +4,7 @@ const Env           = use('Env')
 const superagent    = use('superagent')
 require('superagent-charset')(superagent)
 const Redis         = use('Redis')
+const md5           = use('md5')
 const Database      = use('Database')
 
 class UserController {
@@ -20,9 +21,19 @@ class UserController {
   }
 
   async store ({ request, view, response, session }) {
-    const users = JSON.parse(await Redis.get('users'))
+    var rows = request.only(['users', 'info_phone', 'info_address', 'info_number', 'info_gender', 'user_pass'])
+    if (rows.user_pass == null || rows.user_pass.length < 5) {
+      session.flash({
+        type: 'red',
+        header: '登录密码有误',
+        message: '密码长度至少需 6 位'
+      })
 
-    var rows = request.only(['info_phone', 'info_address', 'info_number', 'info_gender'])
+      response.redirect('back')
+      return
+    }
+
+    const users = JSON.parse(await Redis.get('users'))
     this.set_user_meta(users.id, 'info_phone', rows.info_phone)
     this.set_user_meta(users.id, 'info_address', rows.info_address)
     this.set_user_meta(users.id, 'info_number', rows.info_number)
@@ -33,6 +44,12 @@ class UserController {
       .table('ex_users')
       .where('ID', users.id)
       .update(user_email)
+
+    // await Database.raw('update ex_users set user_pass=md5(' + rows.user_pass + ') where ID = ' + users.id)
+    await Database
+      .table('ex_users')
+      .where('ID', users.id)
+      .update('user_pass', md5(rows.user_pass))
 
     Redis.set('users', JSON.stringify({
       token: users.token,
